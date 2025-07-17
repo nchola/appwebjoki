@@ -30,10 +30,13 @@ const ScrollHeroSection = () => {
         pin: true,
         anticipatePin: 1,
         onUpdate: (self) => {
-          // Fade out hero content as we scroll
+          // Fade out hero content more gradually and later in the scroll
+          const fadeStart = 0.3; // Start fading at 30% scroll progress
+          const fadeProgress = Math.max(0, (self.progress - fadeStart) / (1 - fadeStart));
+          
           gsap.to(headline, {
-            opacity: 1 - self.progress,
-            scale: 1 - (self.progress * 0.1),
+            opacity: 1 - fadeProgress,
+            scale: 1 - (fadeProgress * 0.1),
             duration: 0.3,
             ease: "power2.out"
           });
@@ -41,7 +44,7 @@ const ScrollHeroSection = () => {
       }
     });
 
-    // Animate content section sliding up
+    // Animate content section sliding up with slower, more controlled timing
     tl.to(content, {
       y: 0,
       duration: 1,
