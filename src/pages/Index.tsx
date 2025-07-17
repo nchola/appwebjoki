@@ -5,13 +5,14 @@ import PhilosophySection from '@/components/PhilosophySection';
 import PortfolioSection from '@/components/PortfolioSection';
 import TestimonialSection from '@/components/TestimonialSection';
 import Footer from '@/components/Footer';
+import LottieSection from '@/components/LottieSection';
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      <Header />
       <main>
         <HeroSection />
+        <LottieSection />
         <PhilosophySection />
         <PortfolioSection />
         <TestimonialSection />
