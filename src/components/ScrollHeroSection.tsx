@@ -110,13 +110,7 @@ const ScrollHeroSection = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="flex flex-col items-center text-white/60">
-            <div className="w-px h-16 bg-gradient-to-b from-white/60 to-transparent mb-2"></div>
-            <span className="text-sm uppercase tracking-wider">Scroll</span>
-          </div>
-        </div>
+        
       </section>
 
       {/* Spacer to allow scroll trigger */}
