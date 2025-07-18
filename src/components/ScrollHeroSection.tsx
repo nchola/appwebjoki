@@ -96,14 +96,15 @@ const ScrollHeroSection = () => {
         <div className="relative z-10 flex items-center justify-center h-full">
           <div className="text-center px-6">
             <h1 
-              className="text-6xl md:text-8xl lg:text-9xl font-light text-white tracking-tight leading-none"
+              className="text-4xl md:text-6xl lg:text-6xl font-light text-white tracking-tight leading-none"
               style={{ 
                 fontFamily: 'Inter, sans-serif'
               }}
             >
-              Digital Worth
+              Precision in Code
+
               <br />
-              <span className="font-extralight italic">Experiencing</span>
+              <span className="font-extralight italic">Clarity in Experience</span>
             </h1>
             
             {/* Subtle accent line */}
@@ -111,7 +112,7 @@ const ScrollHeroSection = () => {
           </div>
         </div>
 
-
+<TrustedBySection></TrustedBySection>
       </section>
 
       {/* Spacer to allow scroll trigger */}
