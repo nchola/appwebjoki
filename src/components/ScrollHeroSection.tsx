@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -7,144 +7,64 @@ gsap.registerPlugin(ScrollTrigger);
 const ScrollHeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
-
-  // Throttle function for performance
-  const throttle = useCallback((func: Function, limit: number) => {
-    let inThrottle: boolean;
-    return function(this: any, ...args: any[]) {
-      if (!inThrottle) {
-        func.apply(this, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     const hero = heroRef.current;
     const content = contentRef.current;
-    const headline = headlineRef.current;
 
-    if (!hero || !content || !headline) return;
+    if (!hero || !content) return;
 
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    if (prefersReducedMotion) {
+      gsap.set(content, { y: 0 });
+      return;
+    }
+
     // Set will-change for performance
-    gsap.set([hero, content, headline], { 
-      willChange: 'transform, opacity',
+    gsap.set([hero, content], { 
+      willChange: 'transform',
       force3D: true 
     });
 
-    // Initial setup
+    // Initial setup - content section starts below viewport
     gsap.set(content, { y: "100vh" });
-    gsap.set(headline, { opacity: 1, scale: 1 });
 
-    // Main timeline with optimized timing
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: hero,
-        start: "top top",
-        end: "bottom top",
-        scrub: prefersReducedMotion ? false : 1.2, // Slower scrub for smoother animation
-        pin: true,
-        anticipatePin: 1,
-        refreshPriority: -1,
-        onUpdate: (self) => {
-          // Optimized fade timing - start at 60% scroll progress
-          const fadeStart = 0.6;
-          const fadeProgress = Math.max(0, Math.min(1, (self.progress - fadeStart) / (1 - fadeStart)));
-          
-          // Apply cubic-bezier easing manually
-          const easeOut = 1 - Math.pow(1 - fadeProgress, 3);
-          
-          // Hero fade out with smooth scaling
-          gsap.to(headline, {
-            opacity: 1 - easeOut,
-            scale: 1 - (easeOut * 0.05), // Reduced scale change
-            y: -(easeOut * 30), // Subtle upward movement
-            duration: 0.1,
-            ease: "none",
-            overwrite: true
-          });
-
-          // Add subtle blur effect during transition
-          if (fadeProgress > 0) {
-            gsap.to(hero, {
-              filter: `blur(${fadeProgress * 2}px)`,
-              duration: 0.1,
-              ease: "none",
-              overwrite: true
-            });
-          }
-        }
+    // Create scroll-triggered animation for physical covering effect
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: content,
+      start: "top bottom", // Animation starts when content section enters viewport
+      end: "top top", // Animation ends when content section reaches top
+      scrub: true, // Link animation directly to scroll progress
+      onUpdate: (self) => {
+        // Calculate transform based on scroll progress
+        const progress = self.progress;
+        const yValue = 100 - (progress * 100); // From 100vh to 0
+        
+        gsap.set(content, {
+          y: `${yValue}vh`,
+          ease: "none"
+        });
       }
     });
 
-    // Store the ScrollTrigger instance
-    scrollTriggersRef.current.push(tl.scrollTrigger);
-
-    // Content section animation with improved timing
-    tl.to(content, {
-      y: 0,
-      duration: 1.5, // Longer duration for smoother movement
-      ease: "power2.inOut"
-    });
-
-    // Intersection Observer for additional control
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px 0px -40% 0px', // Trigger when 60% visible
-      threshold: [0.1, 0.3, 0.6, 0.8, 0.9]
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.target === hero) {
-          const ratio = entry.intersectionRatio;
-          
-          // Additional smooth controls based on intersection ratio
-          if (ratio < 0.4) {
-            // Hero is mostly out of view
-            gsap.to(content, {
-              opacity: 1,
-              duration: 0.8,
-              ease: "power2.out"
-            });
-          }
-        }
-      });
-    }, observerOptions);
-
-    observer.observe(hero);
-
     // Cleanup function
     return () => {
-      // Remove will-change
-      gsap.set([hero, content, headline], { willChange: 'auto' });
-      
-      // Kill all ScrollTriggers
-      scrollTriggersRef.current.forEach(trigger => trigger?.kill());
-      scrollTriggersRef.current = [];
-      
-      // Disconnect observer
-      observer.disconnect();
-      
-      // Clear any remaining tweens
-      gsap.killTweensOf([hero, content, headline]);
+      gsap.set([hero, content], { willChange: 'auto' });
+      scrollTrigger.kill();
+      gsap.killTweensOf([hero, content]);
     };
-  }, [throttle]);
+  }, []);
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section - Fixed Background */}
       <section 
         ref={heroRef}
-        id="hero"
-        className="relative w-full h-screen overflow-hidden"
-        style={{ willChange: 'transform' }}
+        id="hero-section"
+        className="fixed top-0 left-0 w-full h-screen overflow-hidden"
+        style={{ zIndex: 1 }}
       >
         {/* Background Video */}
         <div className="absolute inset-0 w-full h-full">
@@ -175,11 +95,9 @@ const ScrollHeroSection = () => {
         <div className="relative z-10 flex items-center justify-center h-full">
           <div className="text-center px-6">
             <h1 
-              ref={headlineRef}
               className="text-6xl md:text-8xl lg:text-9xl font-light text-white tracking-tight leading-none"
               style={{ 
-                fontFamily: 'Inter, sans-serif',
-                willChange: 'transform, opacity'
+                fontFamily: 'Inter, sans-serif'
               }}
             >
               Digital Worth
@@ -201,12 +119,15 @@ const ScrollHeroSection = () => {
         </div>
       </section>
 
-      {/* Content Section */}
+      {/* Spacer to allow scroll trigger */}
+      <div className="h-screen"></div>
+
+      {/* Content Section - Sliding Overlay */}
       <section 
         ref={contentRef}
-        id="content"
-        className="relative z-20 min-h-screen bg-[#0a0f2d] text-white opacity-0"
-        style={{ willChange: 'transform' }}
+        id="content-section"
+        className="relative w-full min-h-screen bg-[#0a0f2d] text-white"
+        style={{ zIndex: 2, willChange: 'transform' }}
       >
         <div className="container mx-auto px-6 py-24">
           {/* Section Header */}
