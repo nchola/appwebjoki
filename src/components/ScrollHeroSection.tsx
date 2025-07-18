@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import TrustedBySection from './TrustedBySection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -110,7 +111,7 @@ const ScrollHeroSection = () => {
           </div>
         </div>
 
-        
+
       </section>
 
       {/* Spacer to allow scroll trigger */}
