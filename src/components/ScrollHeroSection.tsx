@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import TrustedBySection from './TrustedBySection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -109,6 +110,9 @@ const ScrollHeroSection = () => {
             <div className="mt-8 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-60"></div>
           </div>
         </div>
+
+        {/* Trusted By Section */}
+        <TrustedBySection />
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
