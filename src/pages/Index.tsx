@@ -3,7 +3,6 @@ import ScrollHeroSection from '@/components/ScrollHeroSection';
 import PhilosophySection from '@/components/PhilosophySection';
 import PortfolioSection from '@/components/PortfolioSection';
 import TestimonialSection from '@/components/TestimonialSection';
-import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
@@ -34,8 +33,7 @@ const Index = () => {
           {/* Section 4: Testimonials */}
           <TestimonialSection />
           
-          {/* Footer */}
-          <Footer />
+          {/* Footer functionality is now within the hero section */}
         </div>
       </main>
     </div>
