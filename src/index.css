@@ -333,3 +333,18 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Hero reveal animation */
+#hero-section.reveal-mode {
+  z-index: 3 !important; /* Higher than footer when revealing */
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Footer reveal trigger */
+.footer-reveal-trigger {
+  position: relative;
+  z-index: 1; /* Lower than content sections but can reveal hero */
+  min-height: 100vh;
+}
