@@ -66,12 +66,8 @@ const Header = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out ${
-        isScrolled 
-          ? 'bg-[#0C0D10]/95 backdrop-blur-md border-b border-white/10' 
-          : 'bg-transparent'
-      }`}
-      style={{ height: '130px' }}
+      className="fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out bg-transparent"
+      style={{ height: '120px' }}
     >
       <div className="container mx-auto px-6 h-full">
         <div className="flex items-center justify-between h-full">
@@ -80,22 +76,25 @@ const Header = () => {
           <div className="header__logo">
             <a href="/" aria-label="Company Homepage" className="block">
               <div className="flex items-center">
-                <span className="text-2xl font-bold text-white tracking-tight">
-                  APPWEBJOKI
-                </span>
+                <img
+                  src="/logo.svg"
+                  alt="AppWebJoki Logo"
+                  className="h-8 w-auto"
+                  style={{ filter: 'invert(1)' }}
+                />
               </div>
             </a>
           </div>
 
           {/* Desktop Navigation with Dock */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center h-full">
             <Dock
               items={dockItems}
-              className="bg-white/5 backdrop-blur-sm border border-white/10"
-              magnification={70}
-              distance={150}
-              baseItemSize={50}
-              panelHeight={64}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 mt-0 mb-0 pb-0 static"
+              magnification={56}
+              distance={120}
+              baseItemSize={40}
+              panelHeight={50}
             />
           </div>
 

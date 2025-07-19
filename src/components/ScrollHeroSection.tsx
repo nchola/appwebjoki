@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import TrustedBySection from './TrustedBySection';
+import Orb from './ExternalCSSTemplate/Orb/Orb';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,13 +78,12 @@ const ScrollHeroSection = () => {
             playsInline
             preload="metadata"
           >
-            <source src="/api/placeholder/1920/1080" type="video/mp4" />
             {/* Fallback gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-900 to-neutral-800"></div>
           </video>
           
-          {/* Video Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/50 to-indigo-900/60"></div>
+          {/* Video Overlay - even darker */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/95 via-black/90 to-neutral-900/80"></div>
           
           {/* Animated Background Pattern */}
           <div className="absolute inset-0 opacity-20">
@@ -92,9 +92,15 @@ const ScrollHeroSection = () => {
           </div>
         </div>
 
-        {/* Hero Content */}
+        {/* Hero Content with Orb */}
         <div className="relative z-10 flex items-center justify-center h-full">
-          <div className="text-center px-6">
+          {/* Orb background, centered and behind text */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+            <div className="w-[340px] h-[340px] md:w-[480px] md:h-[480px] opacity-80">
+              <Orb hue={260} hoverIntensity={0.20} rotateOnHover={true} forceHoverState= {true} />
+            </div>
+          </div>
+          <div className="relative z-10 text-center px-6">
             <h1 
               className="text-4xl md:text-6xl lg:text-6xl font-light text-white tracking-tight leading-none"
               style={{ 
@@ -106,7 +112,6 @@ const ScrollHeroSection = () => {
               <br />
               <span className="font-extralight italic">Clarity in Experience</span>
             </h1>
-            
             {/* Subtle accent line */}
             <div className="mt-8 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-60"></div>
           </div>

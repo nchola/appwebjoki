@@ -1,4 +1,4 @@
-
+import Header from '@/components/Header';
 import ScrollHeroSection from '@/components/ScrollHeroSection';
 import PhilosophySection from '@/components/PhilosophySection';
 import PortfolioSection from '@/components/PortfolioSection';
@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 const Index = () => {
   return (
     <div className="min-h-screen">
+        <Header />
       <main>
         <ScrollHeroSection />
         <PhilosophySection />
