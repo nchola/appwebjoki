@@ -19,7 +19,8 @@ const Index = () => {
           className="relative z-[2] w-full"
           style={{ 
             marginTop: '100vh', // Start below the hero section
-            backgroundColor: '#0a0f2d' // Ensure solid background
+            backgroundColor: '#0f172a', // Solid dark background
+            minHeight: '100vh' // Ensure it covers the full viewport
           }}
         >
           {/* Section 1: Crafting Digital Experiences (already in ScrollHeroSection) */}

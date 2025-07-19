@@ -6,34 +6,43 @@ const Footer = () => {
 
   useEffect(() => {
     const footer = footerRef.current;
-    if (!footer) return;
+    const hero = document.getElementById('hero-section');
+    if (!footer || !hero) return;
 
-    // Trigger hero reveal when footer comes into view
-    const footerObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const heroSection = document.getElementById('hero-section');
-        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          heroSection?.classList.add('reveal-mode');
-        } else {
-          heroSection?.classList.remove('reveal-mode');
-        }
-      });
-    }, { threshold: [0.5] });
-
-    footerObserver.observe(footer);
-
-    return () => {
-      footerObserver.disconnect();
+    // Scroll-based hero reveal animation
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const footerTop = footer.getBoundingClientRect().top + scrollY;
+      
+      // Calculate scroll progress when footer comes into view
+      const scrollProgress = Math.max(0, Math.min(1, (scrollY - (footerTop - windowHeight)) / windowHeight));
+      
+      // Animate hero reveal based on scroll progress
+      if (scrollProgress > 0) {
+        hero.style.transform = `translateY(${(1 - scrollProgress) * 100}vh)`;
+        hero.style.opacity = `${scrollProgress}`;
+        hero.style.zIndex = '3'; // Higher than footer when revealing
+      } else {
+        hero.style.transform = 'translateY(100vh)';
+        hero.style.opacity = '0';
+        hero.style.zIndex = '1'; // Normal z-index when hidden
+      }
     };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <footer 
       ref={footerRef}
       id="footer-section" 
-      className="footer-reveal-trigger relative z-[1] min-h-screen"
+      className="relative z-[3] min-h-screen"
       style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
+        // Same gradient family as hero for seamless transition
       }}
     >
       <div className="container mx-auto px-6 py-24">

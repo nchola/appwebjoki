@@ -335,6 +335,15 @@ All colors MUST be HSL.
 }
 
 /* Hero reveal animation */
+#hero-section {
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              z-index 0s;
+  transform: translateY(100vh);
+  opacity: 0;
+  z-index: 1;
+}
+
 #hero-section.reveal-mode {
   z-index: 3 !important; /* Higher than footer when revealing */
   opacity: 1 !important;
@@ -347,4 +356,16 @@ All colors MUST be HSL.
   position: relative;
   z-index: 1; /* Lower than content sections but can reveal hero */
   min-height: 100vh;
+}
+
+/* Ensure content sections have proper z-index */
+#main-content-wrapper {
+  z-index: 2;
+  position: relative;
+}
+
+/* Footer with higher z-index */
+#footer-section {
+  z-index: 3;
+  position: relative;
 }

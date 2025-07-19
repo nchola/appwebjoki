@@ -37,36 +37,27 @@ const ScrollHeroSection = () => {
           '--hero-reveal-transform': 'scale(1)',
         } as React.CSSProperties}
       >
-        {/* Background Video */}
+        {/* Background - Solid gradient with fallback */}
         <div className="absolute inset-0 w-full h-full">
-          <video
-            className="w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-          >
-            {/* Fallback gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-900 to-neutral-800"></div>
-          </video>
-          
-          {/* Video Overlay - even darker */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/95 via-black/90 to-neutral-900/80"></div>
+          {/* Solid gradient background - always visible */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
           
           {/* Animated Background Pattern */}
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse-slow"></div>
             <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/30 rounded-full blur-3xl animate-float"></div>
           </div>
+          
+          {/* Reduced overlay opacity to show background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-slate-900/60"></div>
         </div>
 
         {/* Hero Content with Orb */}
-        <div className="relative z-10 flex items-center justify-center h-full">
+        <div className="relative z-10 flex flex-col items-center justify-center h-full">
           {/* Orb background, centered and behind text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
             <div className="w-[340px] h-[340px] md:w-[480px] md:h-[480px] opacity-80">
-              <Orb hue={260} hoverIntensity={0.20} rotateOnHover={true} forceHoverState= {true} />
+              <Orb hue={260} hoverIntensity={0.20} rotateOnHover={true} forceHoverState={true} />
             </div>
           </div>
           <div className="relative z-10 text-center px-6">
@@ -77,7 +68,6 @@ const ScrollHeroSection = () => {
               }}
             >
               Precision in Code
-
               <br />
               <span className="font-extralight italic">Clarity in Experience</span>
             </h1>
@@ -86,7 +76,7 @@ const ScrollHeroSection = () => {
           </div>
         </div>
 
-<TrustedBySection></TrustedBySection>
+        <TrustedBySection></TrustedBySection>
       </section>
     </>
   );
