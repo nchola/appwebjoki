@@ -334,17 +334,37 @@ All colors MUST be HSL.
   }
 }
 
-/* Hero reveal animation */
-#hero-section.reveal-mode {
-  z-index: 3 !important; /* Higher than footer when revealing */
-  opacity: 1 !important;
-  transform: scale(1) !important;
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+/* Hero section - FIXED and UNTOUCHED */
+#hero-section {
+  /* Hero should remain fixed and never animated by scroll events */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  /* NO transform, opacity, or transition properties that could be animated by JavaScript */
 }
 
-/* Footer reveal trigger */
-.footer-reveal-trigger {
+/* REMOVED: All hero reveal animation CSS that was trying to animate the hero */
+
+/* Footer reveal trigger - REMOVED: This was causing confusion */
+/* .footer-reveal-trigger {
   position: relative;
-  z-index: 1; /* Lower than content sections but can reveal hero */
+  z-index: 1;
   min-height: 100vh;
+} */
+
+/* Ensure content sections have proper z-index to cover hero */
+#main-content-wrapper {
+  z-index: 2;
+  position: relative;
+  /* This covers the hero section during normal scrolling */
+}
+
+/* Footer with higher z-index to cover content sections */
+#footer-section {
+  z-index: 3;
+  position: relative;
+  /* This covers all content sections and reveals the fixed hero behind it */
 }

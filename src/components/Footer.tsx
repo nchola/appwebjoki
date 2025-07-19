@@ -4,36 +4,16 @@ import { useEffect, useRef } from 'react';
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const footer = footerRef.current;
-    if (!footer) return;
-
-    // Trigger hero reveal when footer comes into view
-    const footerObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const heroSection = document.getElementById('hero-section');
-        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          heroSection?.classList.add('reveal-mode');
-        } else {
-          heroSection?.classList.remove('reveal-mode');
-        }
-      });
-    }, { threshold: [0.5] });
-
-    footerObserver.observe(footer);
-
-    return () => {
-      footerObserver.disconnect();
-    };
-  }, []);
+  // REMOVED: All scroll logic for hero reveal - hero should remain fixed and untouched
 
   return (
     <footer 
       ref={footerRef}
       id="footer-section" 
-      className="footer-reveal-trigger relative z-[1] min-h-screen"
+      className="relative z-[3] min-h-screen" // z-index: 3 (higher than main-content-wrapper z-index: 2)
       style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'
+        // Use the EXACT SAME SOLID BACKGROUND as the hero section
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)', // Match hero gradient
       }}
     >
       <div className="container mx-auto px-6 py-24">
