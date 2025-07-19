@@ -4,45 +4,16 @@ import { useEffect, useRef } from 'react';
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const footer = footerRef.current;
-    const hero = document.getElementById('hero-section');
-    if (!footer || !hero) return;
-
-    // Scroll-based hero reveal animation
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-      const footerTop = footer.getBoundingClientRect().top + scrollY;
-      
-      // Calculate scroll progress when footer comes into view
-      const scrollProgress = Math.max(0, Math.min(1, (scrollY - (footerTop - windowHeight)) / windowHeight));
-      
-      // Animate hero reveal based on scroll progress
-      if (scrollProgress > 0) {
-        hero.style.transform = `translateY(${(1 - scrollProgress) * 100}vh)`;
-        hero.style.opacity = `${scrollProgress}`;
-        hero.style.zIndex = '3'; // Higher than footer when revealing
-      } else {
-        hero.style.transform = 'translateY(100vh)';
-        hero.style.opacity = '0';
-        hero.style.zIndex = '1'; // Normal z-index when hidden
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // REMOVED: All scroll logic for hero reveal - hero should remain fixed and untouched
 
   return (
     <footer 
       ref={footerRef}
       id="footer-section" 
-      className="relative z-[3] min-h-screen"
+      className="relative z-[3] min-h-screen" // z-index: 3 (higher than main-content-wrapper z-index: 2)
       style={{
-        background: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
-        // Same gradient family as hero for seamless transition
+        // Use the EXACT SAME SOLID BACKGROUND as the hero section
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)', // Match hero gradient
       }}
     >
       <div className="container mx-auto px-6 py-24">

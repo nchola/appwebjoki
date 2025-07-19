@@ -28,28 +28,24 @@ const ScrollHeroSection = () => {
       <section 
         ref={heroRef}
         id="hero-section"
-        className="fixed top-0 left-0 w-full h-screen overflow-hidden transition-all duration-800 ease-out"
+        className="fixed top-0 left-0 w-full h-screen overflow-hidden"
         style={{ 
           zIndex: 1,
-          // Hero reveal animation CSS
-          '--hero-reveal-z-index': '3',
-          '--hero-reveal-opacity': '1',
-          '--hero-reveal-transform': 'scale(1)',
         } as React.CSSProperties}
       >
         {/* Background - Solid gradient with fallback */}
         <div className="absolute inset-0 w-full h-full">
-          {/* Solid gradient background - always visible */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          {/* THIS IS THE PRIMARY SOLID BACKGROUND */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 z-0"></div>
           
-          {/* Animated Background Pattern */}
-          <div className="absolute inset-0 opacity-20">
+          {/* Animated Background Pattern - place above solid background but below content */}
+          <div className="absolute inset-0 opacity-20 z-10">
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse-slow"></div>
             <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/30 rounded-full blur-3xl animate-float"></div>
           </div>
           
-          {/* Reduced overlay opacity to show background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-slate-900/60"></div>
+          {/* REMOVED: Semi-transparent overlay that was causing blankness */}
+          {/* <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-slate-900/60"></div> */}
         </div>
 
         {/* Hero Content with Orb */}
