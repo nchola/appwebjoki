@@ -1,5 +1,6 @@
 import TrustedBySection from './TrustedBySection';
 import Orb from './ExternalCSSTemplate/Orb/Orb';
+import { TextPressureHero } from './ExternalCSSTemplate/TextPressure/TextPressure';
 
 const ScrollHeroSection = () => {
   return (
@@ -38,16 +39,13 @@ const ScrollHeroSection = () => {
             </div>
           </div>
           <div className="relative z-10 text-center px-6">
-            <h1 
+            <TextPressureHero
               className="text-4xl md:text-6xl lg:text-6xl font-light text-white tracking-tight leading-none"
-              style={{ fontFamily: 'Inter, sans-serif' }}
-            >
-              Precision in Code
-              <br />
-              <span className="font-extralight italic">Clarity in Experience</span>
-            </h1>
-            {/* Subtle accent line */}
-            <div className="mt-8 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-60"></div>
+              scale={true}
+              flex={true}
+              alpha={true}
+              minFontSize={32}
+            />
           </div>
         </div>
 
