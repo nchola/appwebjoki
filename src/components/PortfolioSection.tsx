@@ -61,15 +61,18 @@ const PortfolioSection = () => {
   ];
 
   return (
-    <section id="work" className="py-20 lg:py-32 bg-gradient-premium">
+    <section id="work" className="py-20 lg:py-32"
+      style={{
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Portfolio
-            <span className="bg-gradient-brand bg-clip-text text-transparent"> Unggulan</span>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+            Portfolio Unggulan
           </h2>
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-xl text-gray-200 leading-relaxed">
             Koleksi karya terbaik yang menggambarkan dedikasi kami terhadap keunggulan desain dan inovasi teknologi
           </p>
         </div>
@@ -79,7 +82,7 @@ const PortfolioSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+              className="group bg-white/5 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Project Image */}
@@ -89,8 +92,7 @@ const PortfolioSection = () => {
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 {/* View Project Button */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <Button size="sm" className="bg-white/90 hover:bg-white text-gray-900 rounded-lg">
@@ -98,41 +100,36 @@ const PortfolioSection = () => {
                   </Button>
                 </div>
               </div>
-
               {/* Project Content */}
               <div className="p-6">
                 {/* Category & Client */}
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium text-brand bg-blue-50 px-3 py-1 rounded-full">
+                  <span className="text-sm font-medium text-blue-400 bg-white/10 px-3 py-1 rounded-full">
                     {project.category}
                   </span>
-                  <span className="text-sm text-gray-500">{project.client}</span>
+                  <span className="text-sm text-gray-300">{project.client}</span>
                 </div>
-
                 {/* Title */}
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand transition-colors duration-300">
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">
                   {project.title}
                 </h3>
-
                 {/* Description */}
-                <p className="text-gray-600 mb-4 leading-relaxed">
+                <p className="text-gray-200 mb-4 leading-relaxed">
                   {project.description}
                 </p>
-
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tags.map((tag, tagIndex) => (
                     <span
                       key={tagIndex}
-                      className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-md"
+                      className="text-xs font-medium text-blue-200 bg-white/10 px-2 py-1 rounded-md"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-
                 {/* View Case Study Link */}
-                <Button variant="ghost" className="p-0 h-auto font-semibold text-brand hover:text-brand-hover group">
+                <Button variant="ghost" className="p-0 h-auto font-semibold text-blue-400 hover:text-blue-300 group">
                   Lihat Case Study
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -140,10 +137,9 @@ const PortfolioSection = () => {
             </div>
           ))}
         </div>
-
         {/* View All Projects CTA */}
         <div className="text-center mt-16">
-          <Button size="lg" variant="outline" className="px-8 py-4 text-lg font-semibold rounded-lg border-2 border-gray-300 hover:border-brand hover:text-brand transition-all duration-200">
+          <Button size="lg" variant="outline" className="px-8 py-4 text-lg font-semibold rounded-lg border-2 border-white/20 text-white hover:border-blue-400 hover:text-blue-400 transition-all duration-200">
             Lihat Semua Proyek
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
