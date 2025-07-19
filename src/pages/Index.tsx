@@ -8,27 +8,28 @@ import { useEffect } from 'react';
 const Index = () => {
   useEffect(() => {
     const footerReveal = document.getElementById('footer-reveal');
-    if (!footerReveal) return;
+    const sentinel = document.getElementById('footer-sentinel');
+    if (!footerReveal || !sentinel) return;
 
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-      const scrollProgress = scrollY / (documentHeight - windowHeight);
-      const revealThreshold = 0.97; // Mulai animasi di 97% scroll
-      const transitionEnd = 1;      // Selesai di 100% scroll
+    // Buat threshold array 0, 0.01, 0.02, ..., 1
+    const thresholds = Array.from({ length: 101 }, (_, i) => i / 100);
 
-      if (scrollProgress >= revealThreshold) {
-        const revealProgress = Math.min(1, (scrollProgress - revealThreshold) / (transitionEnd - revealThreshold));
-        footerReveal.style.transform = `translateY(${(1 - revealProgress) * 100}%)`;
-      } else {
-        footerReveal.style.transform = 'translateY(100%)';
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        // intersectionRatio: 0 (belum masuk viewport) sampai 1 (full masuk viewport)
+        const ratio = entry.intersectionRatio;
+        // Footer naik proporsional dengan ratio
+        footerReveal.style.transform = `translateY(${(1 - ratio) * 100}%)`;
+      },
+      {
+        root: null,
+        threshold: thresholds,
       }
-    };
+    );
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    observer.observe(sentinel);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -51,6 +52,8 @@ const Index = () => {
           <PhilosophySection />
           <PortfolioSection />
           <TestimonialSection />
+          {/* Sentinel lebih tinggi untuk smoothness */}
+          <div id="footer-sentinel" className="w-full h-64"></div>
         </div>
 
         {/* Footer Reveal Section - HIGHER Z-INDEX & FIXED POSITIONING */}
