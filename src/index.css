@@ -346,15 +346,6 @@ All colors MUST be HSL.
   /* NO transform, opacity, or transition properties that could be animated by JavaScript */
 }
 
-/* REMOVED: All hero reveal animation CSS that was trying to animate the hero */
-
-/* Footer reveal trigger - REMOVED: This was causing confusion */
-/* .footer-reveal-trigger {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-} */
-
 /* Ensure content sections have proper z-index to cover hero */
 #main-content-wrapper {
   z-index: 2;
@@ -362,9 +353,27 @@ All colors MUST be HSL.
   /* This covers the hero section during normal scrolling */
 }
 
-/* Footer with higher z-index to cover content sections */
-#footer-section {
-  z-index: 3;
+/* Ensure hero content is visible above background layers */
+#hero-main-content {
+  z-index: 30;
   position: relative;
-  /* This covers all content sections and reveals the fixed hero behind it */
+}
+
+/* Footer content within hero section */
+#hero-footer-content {
+  z-index: 40;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.5s ease-out;
+  pointer-events: none;
+}
+
+/* Smooth transitions for content switching */
+#hero-main-content,
+#hero-footer-content {
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }

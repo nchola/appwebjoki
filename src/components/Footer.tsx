@@ -1,14 +1,9 @@
 
-import { useEffect, useRef } from 'react';
+import React from 'react';
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement>(null);
-
-  // REMOVED: All scroll logic for hero reveal - hero should remain fixed and untouched
-
   return (
     <footer 
-      ref={footerRef}
       id="footer-section" 
       className="relative z-[3] min-h-screen" // z-index: 3 (higher than main-content-wrapper z-index: 2)
       style={{
