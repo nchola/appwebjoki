@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Sun, Moon, Globe, ArrowUpRight, Home, Briefcase, User, Mail } from 'lucide-react';
-import Dock from './ExternalCSSTemplate/Dock';
-import type { DockItemData } from './ExternalCSSTemplate/Dock';
+import Dock from './Dock/Dock';
+import type { DockItemData } from './Dock/Dock';
+import ContactModal from './ui/ContactModal';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +11,7 @@ const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentLang, setCurrentLang] = useState('id');
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,7 +148,10 @@ const Header = () => {
             </button>
 
             {/* Contact Button */}
-            <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-white text-[#0C0D10] rounded-full font-medium hover:bg-white/90 transition-all duration-200 transform hover:scale-105">
+            <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-white text-[#0C0D10] rounded-full font-medium hover:bg-white/90 transition-all duration-200 transform hover:scale-105"
+              onClick={() => setContactOpen(true)}
+              type="button"
+            >
               <span>Kontak</span>
             </button>
 
@@ -235,6 +240,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </header>
   );
 };
