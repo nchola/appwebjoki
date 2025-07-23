@@ -79,7 +79,7 @@ const About = () => {
       {/* Kanan: CardSwap Benefit */}
       <div className="flex w-full items-center justify-center md:justify-end relative min-h-[384px] overflow-hidden px-4 md:px-0">
         <div className="relative w-full max-w-full md:max-w-[584px] h-[336px] flex items-center justify-center md:justify-end">
-          <div className="w-full max-w-[320px] md:max-w-full">
+          <div className="w-full max-w-[95vw] md:max-w-full overflow-hidden">
             <CardSwap
               width="100%"
               height={336}

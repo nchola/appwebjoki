@@ -77,7 +77,7 @@ const placeNow = (
   const viewportWidth = window.innerWidth;
   const isMobile = viewportWidth < breakpoint;
   const maxX = isMobile ? viewportWidth * 0.9 : containerWidth;
-  const safeX = Math.min(slot.x, maxX - el.offsetWidth);
+  const safeX = Math.min(slot.x, maxX - el.offsetWidth - 12); // buffer 12px agar tidak overflow
 
   gsap.set(el, {
     x: safeX,
@@ -103,7 +103,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   easing = "elastic",
   align = "center",
   children,
-  mobileCardDistance = 20,
+  mobileCardDistance = 8,
   mobileAlign = "center",
   breakpoint = 768,
   ...rest
@@ -118,7 +118,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
 
   const currentCardDistance = isMobile ? mobileCardDistance : cardDistance;
   const currentAlign = isMobile ? mobileAlign : align;
-  const currentWidth = isMobile ? "100%" : width;
+  const currentWidth = isMobile ? "90vw" : width;
 
   const config =
     easing === "elastic"
