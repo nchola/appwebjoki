@@ -254,6 +254,34 @@ const CardSwap: React.FC<CardSwapProps> = ({
     return () => clearInterval(intervalRef.current);
   }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing, currentCardDistance, currentAlign, currentWidth, breakpoint]);
 
+  if (isMobile) {
+    // Render card stack vertikal, tanpa animasi, tanpa absolute/transform
+    return (
+      <div className="flex flex-col gap-4 w-full">
+        {childArr.map((child, i) =>
+          isValidElement<CardProps>(child)
+            ? cloneElement(child, {
+                key: i,
+                ref: refs[i],
+                style: {
+                  width: '100%',
+                  height: 'auto',
+                  position: 'static',
+                  marginBottom: i !== childArr.length - 1 ? 16 : 0,
+                  ...(child.props.style ?? {}),
+                },
+                className: `${child.props.className ?? ''} relative static w-full mb-4`.trim(),
+                onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+                  child.props.onClick?.(e);
+                  onCardClick?.(i);
+                },
+              } as CardProps & React.RefAttributes<HTMLDivElement>)
+            : child
+        )}
+      </div>
+    );
+  }
+
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
       ? cloneElement(child, {
