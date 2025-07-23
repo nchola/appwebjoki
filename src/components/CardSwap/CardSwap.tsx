@@ -9,7 +9,6 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import gsap from "gsap";
 
@@ -25,9 +24,6 @@ export interface CardSwapProps {
   easing?: "linear" | "elastic";
   align?: "center" | "right";
   children: ReactNode;
-  mobileCardDistance?: number;
-  mobileAlign?: "center" | "right";
-  breakpoint?: number;
 }
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -65,31 +61,18 @@ const makeSlot = (
   zIndex: total - i,
 });
 
-// Ubah signature placeNow agar menerima containerRef
-const placeNow = (
-  el: HTMLElement,
-  slot: Slot,
-  skew: number,
-  breakpoint: number,
-  containerRef: React.RefObject<HTMLDivElement>
-) => {
-  const containerWidth = containerRef.current?.offsetWidth || 0;
-  const viewportWidth = window.innerWidth;
-  const isMobile = viewportWidth < breakpoint;
-  const maxX = isMobile ? viewportWidth * 0.9 : containerWidth;
-  const safeX = Math.min(slot.x, maxX - el.offsetWidth - 12); // buffer 12px agar tidak overflow
-
+const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
   gsap.set(el, {
-    x: safeX,
+    x: slot.x,
     y: slot.y,
     z: slot.z,
-    xPercent: isMobile ? 0 : -50,
+    xPercent: -50,
+    yPercent: -50,
     skewY: skew,
     transformOrigin: "center center",
     zIndex: slot.zIndex,
     force3D: true,
   });
-};
 
 const CardSwap: React.FC<CardSwapProps> = ({
   width = 500,
@@ -103,23 +86,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   easing = "elastic",
   align = "center",
   children,
-  mobileCardDistance = 8,
-  mobileAlign = "center",
-  breakpoint = 768,
-  ...rest
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < breakpoint);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, [breakpoint]);
-
-  const currentCardDistance = isMobile ? mobileCardDistance : cardDistance;
-  const currentAlign = isMobile ? mobileAlign : align;
-  const currentWidth = isMobile ? "90vw" : width;
-
   const config =
     easing === "elastic"
       ? {
@@ -161,10 +128,8 @@ const CardSwap: React.FC<CardSwapProps> = ({
     refs.forEach((r, i) =>
       placeNow(
         r.current!,
-        makeSlot(i, currentCardDistance, verticalDistance, total),
-        skewAmount,
-        breakpoint,
-        container
+        makeSlot(i, cardDistance, verticalDistance, total),
+        skewAmount
       )
     );
 
@@ -185,7 +150,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       tl.addLabel("promote", `-=${config.durDrop * config.promoteOverlap}`);
       rest.forEach((idx, i) => {
         const el = refs[idx].current!;
-        const slot = makeSlot(i, currentCardDistance, verticalDistance, refs.length);
+        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
         tl.set(el, { zIndex: slot.zIndex }, "promote");
         tl.to(
           el,
@@ -202,7 +167,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
 
       const backSlot = makeSlot(
         refs.length - 1,
-        currentCardDistance,
+        cardDistance,
         verticalDistance,
         refs.length
       );
@@ -252,35 +217,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       };
     }
     return () => clearInterval(intervalRef.current);
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing, currentCardDistance, currentAlign, currentWidth, breakpoint]);
-
-  if (isMobile) {
-    // Render card stack vertikal, tanpa animasi, tanpa absolute/transform
-    return (
-      <div className="flex flex-col gap-4 w-full">
-        {childArr.map((child, i) =>
-          isValidElement<CardProps>(child)
-            ? cloneElement(child, {
-                key: i,
-                ref: refs[i],
-                style: {
-                  width: '100%',
-                  height: 'auto',
-                  position: 'static',
-                  marginBottom: i !== childArr.length - 1 ? 16 : 0,
-                  ...(child.props.style ?? {}),
-                },
-                className: `${child.props.className ?? ''} relative static w-full mb-4`.trim(),
-                onClick: (e: React.MouseEvent<HTMLDivElement>) => {
-                  child.props.onClick?.(e);
-                  onCardClick?.(i);
-                },
-              } as CardProps & React.RefAttributes<HTMLDivElement>)
-            : child
-        )}
-      </div>
-    );
-  }
+  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
@@ -288,13 +225,13 @@ const CardSwap: React.FC<CardSwapProps> = ({
           key: i,
           ref: refs[i],
           style: {
-            width: currentWidth,
+            width,
             height,
             ...(child.props.style ?? {}),
-            left: currentAlign === "center" ? "50%" : undefined,
-            right: currentAlign === "right" ? 0 : undefined,
+            left: align === "center" ? "50%" : undefined,
+            right: align === "right" ? 0 : undefined,
             transform:
-              currentAlign === "center"
+              align === "center"
                 ? "translate(-50%, -50%)"
                 : "translateY(-50%)",
           },
@@ -310,11 +247,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
     <div
       ref={container}
       className={
-        currentAlign === "right"
+        align === "right"
           ? "card-swap-container flex items-center justify-end"
           : "card-swap-container flex items-center justify-center"
       }
-      style={{ width: currentWidth, height }}
+      style={{ width, height }}
     >
       {rendered}
     </div>
