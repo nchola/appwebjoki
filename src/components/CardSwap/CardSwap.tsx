@@ -11,6 +11,7 @@ import React, {
   useRef,
 } from "react";
 import gsap from "gsap";
+import { useState } from "react";
 
 export interface CardSwapProps {
   width?: number | string;
@@ -87,6 +88,15 @@ const CardSwap: React.FC<CardSwapProps> = ({
   align = "center",
   children,
 }) => {
+  // Responsive: detect mobile
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 600);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const config =
     easing === "elastic"
       ? {
@@ -124,6 +134,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isMobile) return; // Disable GSAP animation on mobile
     const total = refs.length;
     refs.forEach((r, i) =>
       placeNow(
@@ -217,41 +228,62 @@ const CardSwap: React.FC<CardSwapProps> = ({
       };
     }
     return () => clearInterval(intervalRef.current);
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing, isMobile]);
 
-  const rendered = childArr.map((child, i) =>
-    isValidElement<CardProps>(child)
-      ? cloneElement(child, {
-          key: i,
-          ref: refs[i],
-          style: {
-            width,
-            height,
-            ...(child.props.style ?? {}),
-            left: align === "center" ? "50%" : undefined,
-            right: align === "right" ? 0 : undefined,
-            transform:
-              align === "center"
-                ? "translate(-50%, -50%)"
-                : "translateY(-50%)",
-          },
-          onClick: (e) => {
-            child.props.onClick?.(e as React.MouseEvent<HTMLDivElement>);
-            onCardClick?.(i);
-          },
-        } as CardProps & React.RefAttributes<HTMLDivElement>)
-      : child
-  );
+  const rendered = childArr.map((child, i) => {
+    if (!isValidElement<CardProps>(child)) return child;
+    if (isMobile) {
+      // Stack vertically, no absolute, no transform
+      return cloneElement(child, {
+        key: i,
+        ref: refs[i],
+        style: {
+          width: "100%",
+          height: "auto",
+          position: "static",
+          marginBottom: i !== childArr.length - 1 ? 16 : 0,
+          ...(child.props.style ?? {}),
+        },
+        className: `${child.props.className ?? ""} relative static w-full mb-4`.trim(),
+        onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+          child.props.onClick?.(e);
+          onCardClick?.(i);
+        },
+      } as CardProps & React.RefAttributes<HTMLDivElement>);
+    }
+    // Desktop: original absolute/overlap
+    return cloneElement(child, {
+      key: i,
+      ref: refs[i],
+      style: {
+        width,
+        height,
+        ...(child.props.style ?? {}),
+        left: align === "center" ? "50%" : undefined,
+        right: align === "right" ? 0 : undefined,
+        transform:
+          align === "center"
+            ? "translate(-50%, -50%)"
+            : "translateY(-50%)",
+      },
+      onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+        child.props.onClick?.(e);
+        onCardClick?.(i);
+      },
+    } as CardProps & React.RefAttributes<HTMLDivElement>);
+  });
 
   return (
     <div
       ref={container}
       className={
-        align === "right"
-          ? "card-swap-container flex items-center justify-end"
-          : "card-swap-container flex items-center justify-center"
+        isMobile
+          ? "card-swap-container flex flex-col items-stretch justify-center w-full"
+          : align === "right"
+            ? "card-swap-container flex items-center justify-end"
+            : "card-swap-container flex items-center justify-center"
       }
-      style={{ width, height }}
+      style={isMobile ? { width: "100%", height: "auto" } : { width, height }}
     >
       {rendered}
     </div>
