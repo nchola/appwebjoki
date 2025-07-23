@@ -77,32 +77,37 @@ const About = () => {
         Join dozens of business owners who have experienced positive results from our websites. Contact us today to start your dream website project!
       </motion.div>
       {/* Kanan: CardSwap Benefit */}
-      <div className="flex w-full lg:w-1/2 items-center justify-end relative min-h-[384px] max-w-full overflow-visible">
-        <div className="relative w-full max-w-[504px] h-[336px] flex items-center justify-end">
-          <CardSwap
-            width={"100%"}
-            height={336}
-            cardDistance={90}
-            verticalDistance={36}
-            delay={3000}
-            pauseOnHover={true}
-            align="right"
-          >
-            {benefitList.map((benefit, idx) => (
-              <Card key={idx} customClass="p-0 flex flex-col items-stretch justify-start text-left w-full h-full bg-[#18181b] rounded-xl border border-white/10 shadow-lg">
-                {/* GUI Bar */}
-                <div className="flex items-center gap-3 bg-black/80 rounded-t-xl px-6 py-3 border-b border-white/10">
-                  {/* Simple icon (window/code) */}
-                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2.5" y="4.5" width="17" height="13" rx="3" fill="#232323" stroke="#fff" strokeWidth="1.4"/><circle cx="7.5" cy="8.5" r="1.2" fill="#fff"/><circle cx="11" cy="8.5" r="1.2" fill="#fff"/><circle cx="15" cy="8.5" r="1.2" fill="#fff"/></svg>
-                  <span className="text-white/80 text-lg font-bold">{benefit.title}</span>
-                </div>
-                {/* Konten */}
-                <div className="p-8 flex flex-col items-center justify-center text-center flex-1">
-                  <p className="text-lg text-white/90 font-medium">{benefit.description}</p>
-                </div>
-              </Card>
-            ))}
-          </CardSwap>
+      <div className="flex w-full items-center justify-center md:justify-end relative min-h-[384px] overflow-hidden px-4 md:px-0">
+        <div className="relative w-full max-w-full md:max-w-[584px] h-[336px] flex items-center justify-center md:justify-end">
+          <div className="w-full max-w-[320px] md:max-w-full">
+            <CardSwap
+              width="100%"
+              height={336}
+              cardDistance={90}
+              verticalDistance={30}
+              delay={3000}
+              pauseOnHover={true}
+              align="right"
+              mobileCardDistance={20}
+              mobileAlign="center"
+              breakpoint={768}
+            >
+              {benefitList.map((benefit, idx) => (
+                <Card key={idx} customClass="p-0 flex flex-col items-stretch justify-start text-left w-full h-full bg-[#18181b] rounded-xl border border-white/10 shadow-lg">
+                  {/* GUI Bar */}
+                  <div className="flex items-center gap-3 bg-black/80 rounded-t-xl px-6 py-3 border-b border-white/10">
+                    {/* Simple icon (window/code) */}
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2.5" y="4.5" width="17" height="13" rx="3" fill="#232323" stroke="#fff" strokeWidth="1.4"/><circle cx="7.5" cy="8.5" r="1.2" fill="#fff"/><circle cx="11" cy="8.5" r="1.2" fill="#fff"/><circle cx="15" cy="8.5" r="1.2" fill="#fff"/></svg>
+                    <span className="text-white/80 text-lg font-bold">{benefit.title}</span>
+                  </div>
+                  {/* Konten */}
+                  <div className="p-8 flex flex-col items-center justify-center text-center flex-1">
+                    <p className="text-lg text-white/90 font-medium">{benefit.description}</p>
+                  </div>
+                </Card>
+              ))}
+            </CardSwap>
+          </div>
         </div>
       </div>
     </div>

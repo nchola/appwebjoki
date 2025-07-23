@@ -9,6 +9,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import gsap from "gsap";
 
@@ -24,6 +25,9 @@ export interface CardSwapProps {
   easing?: "linear" | "elastic";
   align?: "center" | "right";
   children: ReactNode;
+  mobileCardDistance?: number;
+  mobileAlign?: "center" | "right";
+  breakpoint?: number;
 }
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -61,18 +65,31 @@ const makeSlot = (
   zIndex: total - i,
 });
 
-const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
+// Ubah signature placeNow agar menerima containerRef
+const placeNow = (
+  el: HTMLElement,
+  slot: Slot,
+  skew: number,
+  breakpoint: number,
+  containerRef: React.RefObject<HTMLDivElement>
+) => {
+  const containerWidth = containerRef.current?.offsetWidth || 0;
+  const viewportWidth = window.innerWidth;
+  const isMobile = viewportWidth < breakpoint;
+  const maxX = isMobile ? viewportWidth * 0.9 : containerWidth;
+  const safeX = Math.min(slot.x, maxX - el.offsetWidth);
+
   gsap.set(el, {
-    x: slot.x,
+    x: safeX,
     y: slot.y,
     z: slot.z,
-    xPercent: -50,
-    yPercent: -50,
+    xPercent: isMobile ? 0 : -50,
     skewY: skew,
     transformOrigin: "center center",
     zIndex: slot.zIndex,
     force3D: true,
   });
+};
 
 const CardSwap: React.FC<CardSwapProps> = ({
   width = 500,
@@ -86,7 +103,23 @@ const CardSwap: React.FC<CardSwapProps> = ({
   easing = "elastic",
   align = "center",
   children,
+  mobileCardDistance = 20,
+  mobileAlign = "center",
+  breakpoint = 768,
+  ...rest
 }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < breakpoint);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [breakpoint]);
+
+  const currentCardDistance = isMobile ? mobileCardDistance : cardDistance;
+  const currentAlign = isMobile ? mobileAlign : align;
+  const currentWidth = isMobile ? "100%" : width;
+
   const config =
     easing === "elastic"
       ? {
@@ -128,8 +161,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
     refs.forEach((r, i) =>
       placeNow(
         r.current!,
-        makeSlot(i, cardDistance, verticalDistance, total),
-        skewAmount
+        makeSlot(i, currentCardDistance, verticalDistance, total),
+        skewAmount,
+        breakpoint,
+        container
       )
     );
 
@@ -150,7 +185,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       tl.addLabel("promote", `-=${config.durDrop * config.promoteOverlap}`);
       rest.forEach((idx, i) => {
         const el = refs[idx].current!;
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
+        const slot = makeSlot(i, currentCardDistance, verticalDistance, refs.length);
         tl.set(el, { zIndex: slot.zIndex }, "promote");
         tl.to(
           el,
@@ -167,7 +202,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
 
       const backSlot = makeSlot(
         refs.length - 1,
-        cardDistance,
+        currentCardDistance,
         verticalDistance,
         refs.length
       );
@@ -217,7 +252,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       };
     }
     return () => clearInterval(intervalRef.current);
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing, currentCardDistance, currentAlign, currentWidth, breakpoint]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
@@ -225,13 +260,13 @@ const CardSwap: React.FC<CardSwapProps> = ({
           key: i,
           ref: refs[i],
           style: {
-            width,
+            width: currentWidth,
             height,
             ...(child.props.style ?? {}),
-            left: align === "center" ? "50%" : undefined,
-            right: align === "right" ? 0 : undefined,
+            left: currentAlign === "center" ? "50%" : undefined,
+            right: currentAlign === "right" ? 0 : undefined,
             transform:
-              align === "center"
+              currentAlign === "center"
                 ? "translate(-50%, -50%)"
                 : "translateY(-50%)",
           },
@@ -247,11 +282,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
     <div
       ref={container}
       className={
-        align === "right"
+        currentAlign === "right"
           ? "card-swap-container flex items-center justify-end"
           : "card-swap-container flex items-center justify-center"
       }
-      style={{ width, height }}
+      style={{ width: currentWidth, height }}
     >
       {rendered}
     </div>
