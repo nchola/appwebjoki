@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { BentoGridItem } from "./ui/BentoGrid";
 import { cn } from "@/utils/cn";
 import CardSwap, { Card } from "./CardSwap/CardSwap";
+import MagicBento from './MagicBento/MagicBento';
 
 const benefitList = [
   {
@@ -75,21 +76,24 @@ const About = () => {
         We offer a flexible, customer-focused approach with unlimited revisions until youre completely satisfied. Our mission is to empower your business with innovative web solutions that increase market reach, strengthen brand awareness, and drive sales growth.
         
       </motion.div>
-      {/* Kanan: CardSwap Benefit */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-xl mx-auto">
-        {benefitList.map((benefit, idx) => (
-          <div
-            key={idx}
-            className="rounded-xl border border-white/10 bg-[#18181b] shadow-lg p-6 flex flex-col items-center text-center"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              {/* Icon */}
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2.5" y="4.5" width="17" height="13" rx="3" fill="#232323" stroke="#fff" strokeWidth="1.4"/><circle cx="7.5" cy="8.5" r="1.2" fill="#fff"/><circle cx="11" cy="8.5" r="1.2" fill="#fff"/><circle cx="15" cy="8.5" r="1.2" fill="#fff"/></svg>
-              <span className="text-white/80 text-lg font-bold">{benefit.title}</span>
-            </div>
-            <p className="text-white/90 text-base">{benefit.description}</p>
-          </div>
-        ))}
+      {/* Kanan: MagicBento untuk Benefit */}
+      <div className="w-full max-w-xl mx-auto">
+        <MagicBento
+          items={benefitList.map(b => ({
+            title: b.title,
+            description: b.description,
+            label: b.title,
+            color: "#18181b"
+          }))}
+          enableStars={true}
+          enableSpotlight={true}
+          enableBorderGlow={true}
+          disableAnimations={false}
+          particleCount={0}
+          enableTilt={false}
+          clickEffect={true}
+          enableMagnetism={true}
+        />
       </div>
     </div>
   );
