@@ -2,7 +2,11 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-export function Footer() {
+interface FooterProps {
+  onContactClick?: () => void;
+}
+
+export function Footer({ onContactClick }: FooterProps) {
     const listItemsRef = useRef<(HTMLLIElement | null)[]>([]);
     const spanItemsRef = useRef<(HTMLSpanElement | null)[]>([]);
 
@@ -85,6 +89,7 @@ export function Footer() {
                             key={index}
                             ref={(el) => { listItemsRef.current[index] = el; }}
                             className="relative overflow-hidden h-5 cursor-pointer"
+                            onClick={text === 'Contact' && onContactClick ? onContactClick : undefined}
                         >
                             <span className="block initial absolute top-0 left-0 w-full h-full">{text}</span>
                             <span className="block hover absolute top-0 left-0 w-full h-full">{text}</span>
@@ -98,7 +103,7 @@ export function Footer() {
             </div>
             <div className='w-full flex flex-col md:flex-row gap-10 justify-between'>
                 <div className='flex gap-10 uppercase'>
-                    <div className=' relative overflow-hidden group/line cursor-pointer'>
+                    <div className=' relative overflow-hidden group/line cursor-pointer' onClick={onContactClick}>
                         <h1 className='leading-none pb-2'>mail</h1>
                         <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
                     </div>

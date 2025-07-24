@@ -1,37 +1,4 @@
-export const links = [
-    {
-        title: "About",
-        href: "/"
-    },
-    {
-        title: "Works",
-        href: "/"
-    },
-    {
-        title: "Services",
-        href: "/"
-    },
-    {
-        title: "Contact",
-        href: "/"
-    }
-]
+import { navItems, footerLinks } from '../../../data/navigation';
 
-export const footerLinks = [
-    {
-        title: "Facebook",
-        href: "/"
-    },
-    {
-        title: "LinkedIn",
-        href: "/"
-    },
-    {
-        title: "Instagram",
-        href: "/"
-    },
-    {
-        title: "Twitter",
-        href: "/"
-    }
-]
+export const links = navItems.map(({ name, href }) => ({ title: name, href }));
+export { footerLinks };

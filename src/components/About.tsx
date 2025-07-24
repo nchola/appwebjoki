@@ -73,8 +73,7 @@ const About = () => {
         appwebjoki is a web development agency dedicated to helping your business thrive in the digital era. Our experienced team creates visually appealing, functional, and responsive websites optimized for your business goals.
         <br /><br />
         We offer a flexible, customer-focused approach with unlimited revisions until youre completely satisfied. Our mission is to empower your business with innovative web solutions that increase market reach, strengthen brand awareness, and drive sales growth.
-        <br /><br />
-        Join dozens of business owners who have experienced positive results from our websites. Contact us today to start your dream website project!
+        
       </motion.div>
       {/* Kanan: CardSwap Benefit */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-xl mx-auto">

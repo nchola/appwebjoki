@@ -1,4 +1,4 @@
-import TrustedBySection from '@/components/TrustedBySection';
+import TrustedBySection from '@/components/ui/TrustedBySection';
 import Orb from '@/components/Orb/Orb';
 import { TextPressureHero } from '@/components/TextPressure/TextPressure';
 

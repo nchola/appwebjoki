@@ -1,11 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Globe, ArrowUpRight, Home, Briefcase, User, Mail } from 'lucide-react';
-import Dock from './Dock/Dock';
-import type { DockItemData } from './Dock/Dock';
-import ContactModal from './ui/ContactModal';
+import { Menu, X, Sun, Moon, Globe, ArrowUpRight, Home, Briefcase, User, Mail, Settings } from 'lucide-react';
+import Dock from '../Dock/Dock';
+import type { DockItemData } from '../Dock/Dock';
+import ContactModal from './ContactModal';
+import { navItems, expandedNavItems } from '../../data/navigation';
 
-const Header = () => {
+interface HeaderProps {
+  onContactClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -22,34 +26,40 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Navigation items untuk desktop
-  const navItems = [
-    { name: 'Home', href: '/', current: true, icon: Home },
-    { name: 'Work', href: '/work', featured: true, icon: Briefcase },
-    { name: 'About', href: '/about', featured: true, icon: User },
-    { name: 'Contact', href: '/contact', icon: Mail },
-  ];
-
-  // Expanded navigation items
-  const expandedNavItems = [
-    { name: 'Work', href: '/work', featured: true },
-    { name: 'About', href: '/about', featured: true },
-    { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Contact', href: '/contact', featured: true },
-    { name: 'Team', href: '/team', secondary: true },
-    { name: 'Services', href: '/services', secondary: true, featured: true },
-    { name: 'Careers', href: '/careers', secondary: true, featured: true },
-  ];
+  // Helper scroll
+  const handleSectionScroll = (href: string) => {
+    if (href === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const id = href.replace('/', '');
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // fallback: scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Dock items untuk navigation
   const dockItems: DockItemData[] = navItems.map((item, index) => ({
     icon: (
-      <item.icon className="w-5 h-5 text-white/80" />
+      (() => {
+        switch (item.icon) {
+          case 'Home': return <Home className="w-5 h-5 text-white/80" />;
+          case 'Briefcase': return <Briefcase className="w-5 h-5 text-white/80" />;
+          case 'User': return <User className="w-5 h-5 text-white/80" />;
+          case 'Mail': return <Mail className="w-5 h-5 text-white/80" />;
+          case 'Settings': return <Settings className="w-5 h-5 text-white/80" />;
+          default: return null;
+        }
+      })()
     ),
     label: item.name,
-    onClick: () => {
-      console.log(`Navigate to ${item.name}`);
-    },
+    onClick: item.name === 'Contact' && onContactClick
+      ? () => onContactClick()
+      : () => handleSectionScroll(item.href),
     className: item.current ? 'bg-white/20 border-white/30' : 'bg-white/5 border-white/10',
   }));
 
@@ -73,10 +83,9 @@ const Header = () => {
     >
       <div className="container mx-auto px-6 h-full">
         <div className="flex items-center justify-between h-full">
-          
           {/* Logo */}
           <div className="header__logo">
-            <a href="/" aria-label="Company Homepage" className="block">
+            <a href="#" aria-label="Company Homepage" className="block" onClick={e => { e.preventDefault(); handleSectionScroll('/'); }}>
               <div className="flex items-center">
                 <img
                   src="/logo.svg"
@@ -102,7 +111,6 @@ const Header = () => {
 
           {/* Header Actions */}
           <div className="flex items-center gap-4">
-            
             {/* Language Switcher */}
             <div className="relative">
               <button
@@ -121,7 +129,6 @@ const Header = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
               {isLangDropdownOpen && (
                 <div className="absolute top-full right-0 mt-2 py-2 w-20 bg-[#0C0D10]/95 backdrop-blur-md border border-white/10 rounded-lg">
                   <button
@@ -133,7 +140,6 @@ const Header = () => {
                 </div>
               )}
             </div>
-
             {/* Theme Switcher */}
             <button
               onClick={toggleTheme}
@@ -146,19 +152,10 @@ const Header = () => {
                 <Sun className="w-4 h-4" />
               )}
             </button>
-
-            {/* Contact Button */}
-            <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-white text-[#0C0D10] rounded-full font-medium hover:bg-white/90 transition-all duration-200 transform hover:scale-105"
-              onClick={() => setContactOpen(true)}
-              type="button"
-            >
-              <span>Kontak</span>
-            </button>
-
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden w-10 h-10 flex items-center justify-center"
+              className="block w-10 h-10 flex items-center justify-center"
               aria-label="Toggle menu"
             >
               <div className="relative w-6 h-6">
@@ -182,10 +179,9 @@ const Header = () => {
           </div>
         </div>
       </div>
-
       {/* Mobile Expanded Navigation */}
       <div 
-        className={`lg:hidden fixed inset-0 bg-[#0C0D10]/98 backdrop-blur-md transition-all duration-500 ease-out ${
+        className={`fixed inset-0 bg-[#0C0D10]/98 backdrop-blur-md transition-all duration-500 ease-out ${
           isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
         style={{ top: '130px' }}
@@ -202,21 +198,50 @@ const Header = () => {
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <a
-                  href={item.href}
-                  className={`group flex items-center justify-between py-4 text-2xl font-medium transition-colors duration-200 ${
-                    item.secondary 
-                      ? 'text-white/60 hover:text-white/80' 
-                      : 'text-white hover:text-white/80'
-                  }`}
-                >
-                  <span>{item.name}</span>
-                  <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </a>
+                {item.name === 'Contact' && onContactClick ? (
+                  <button
+                    type="button"
+                    onClick={() => { setIsMenuOpen(false); onContactClick(); }}
+                    className={`group flex items-center justify-between py-4 text-2xl font-medium transition-colors duration-200 ${
+                      item.secondary 
+                        ? 'text-white/60 hover:text-white/80' 
+                        : 'text-white hover:text-white/80'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      {item.icon === 'Home' && <Home className="w-5 h-5" />}
+                      {item.icon === 'Briefcase' && <Briefcase className="w-5 h-5" />}
+                      {item.icon === 'User' && <User className="w-5 h-5" />}
+                      {item.icon === 'Mail' && <Mail className="w-5 h-5" />}
+                      {item.icon === 'Settings' && <Settings className="w-5 h-5" />}
+                      {item.name}
+                    </span>
+                    <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => { setIsMenuOpen(false); handleSectionScroll(item.href); }}
+                    className={`group flex items-center justify-between py-4 text-2xl font-medium transition-colors duration-200 ${
+                      item.secondary 
+                        ? 'text-white/60 hover:text-white/80' 
+                        : 'text-white hover:text-white/80'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      {item.icon === 'Home' && <Home className="w-5 h-5" />}
+                      {item.icon === 'Briefcase' && <Briefcase className="w-5 h-5" />}
+                      {item.icon === 'User' && <User className="w-5 h-5" />}
+                      {item.icon === 'Mail' && <Mail className="w-5 h-5" />}
+                      {item.icon === 'Settings' && <Settings className="w-5 h-5" />}
+                      {item.name}
+                    </span>
+                    <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </button>
+                )}
               </div>
             ))}
           </nav>
-
           {/* Mobile Footer */}
           <div className="mt-12 pt-8 border-t border-white/10">
             <div className="flex gap-6">
@@ -245,4 +270,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header; 

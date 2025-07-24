@@ -1,16 +1,20 @@
 'use client'
-import Header from "@/components/Header";
+import React, { useState } from 'react';
+import Header from "@/components/ui/Header";
 import About from "@/components/About";
 import ScrollHeroSection from "@/components/ScrollHeroSection";
 import Services from '@/components/Services';
 import Works from "@/components/Works";
 import Footer from "@/components/Footer";
 import LenisScroll from '@/components/ui/LenisScroll';
+import ContactModal from '@/components/ui/ContactModal';
 
 const Index = () => {
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen">
-      <Header />
+      <Header onContactClick={() => setContactModalOpen(true)} />
       <ScrollHeroSection />
       <div
         id="main-content-wrapper"
@@ -24,11 +28,18 @@ const Index = () => {
         }}
       >
         <LenisScroll />
-        <About />
-        <Services />
-        <Works />
-        <Footer />
+        <section id="about">
+          <About />
+        </section>
+        <section id="services">
+          <Services />
+        </section>
+        <section id="work">
+          <Works />
+        </section>
+        <Footer onContactClick={() => setContactModalOpen(true)} />
       </div>
+      <ContactModal open={contactModalOpen} onClose={() => setContactModalOpen(false)} />
     </div>
   );
 };

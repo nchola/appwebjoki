@@ -5,7 +5,7 @@ import Image from "next/image";
 import { perspective, slideIn } from "./anim";
 import clsx from "clsx";
 
-export default function index() {
+export default function index({ onContactClick }) {
 	return (
 		<div className={styles.mainNav}>
 			<div className={styles.nav}>
@@ -15,14 +15,17 @@ export default function index() {
 						return (
 							<div key={`b_${i}`} className={styles.linkContainer}>
 								<motion.div
-									href={href}
 									custom={i}
 									variants={slideIn}
 									initial="initial"
 									animate="enter"
 									exit="exit"
 								>
-									<a>{title}</a>
+									{title === 'Contact' && onContactClick ? (
+										<button onClick={onContactClick} className={styles.contactBtn}>{title}</button>
+									) : (
+										<a href={href}>{title}</a>
+									)}
 								</motion.div>
 							</div>
 						);
@@ -39,6 +42,7 @@ export default function index() {
 								animate="enter"
 								exit="exit"
 								key={`f_${i}`}
+								href={href}
 							>
 								{title}
 							</motion.a>

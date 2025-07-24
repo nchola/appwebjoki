@@ -1,4 +1,4 @@
-import TrustedBySection from './TrustedBySection';
+import TrustedBySection from './ui/TrustedBySection';
 import Orb from './Orb/Orb';
 import { TextPressureHero } from './TextPressure/TextPressure';
 

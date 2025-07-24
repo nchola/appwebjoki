@@ -23,7 +23,7 @@ const menu = {
     }
 }
 
-export default function Index() {
+export default function Index({ onContactClick }) {
     const [isActive, setIsActive] = useState(false);
 
     return (
@@ -35,7 +35,7 @@ export default function Index() {
                 initial="closed"
             >
                 <AnimatePresence>
-                    {isActive && <Nav />}
+                    {isActive && <Nav onContactClick={onContactClick} />}
                 </AnimatePresence>
             </motion.div>
             <Button isActive={isActive} toggleMenu={() => { setIsActive(!isActive) }} />
