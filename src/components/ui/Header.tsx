@@ -5,6 +5,8 @@ import type { DockItemData } from '../Dock/Dock';
 import ContactModal from './ContactModal';
 import { navItems, expandedNavItems } from '../../data/navigation';
 import AnimatedNavItem from './AnimatedNavItem';
+import { motion, AnimatePresence } from 'framer-motion';
+import AnimatedMenu from './AnimatedMenu';
 
 interface HeaderProps {
   onContactClick?: () => void;
@@ -160,19 +162,6 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                 </div>
               )}
             </div>
-            {/* Theme Switcher
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all duration-200"
-              aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-            >
-              {isDarkMode ? (
-                <Moon className="w-4 h-4" />
-              ) : (
-                <Sun className="w-4 h-4" />
-              )}
-            </button> */}
-            {/* Mobile Menu Toggle */}
             <button
               ref={menuButtonRef}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -201,57 +190,27 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
         </div>
       </div>
       {/* Mobile Expanded Navigation */}
-      <div
-        className={`fixed z-50 transition-all duration-500 ease-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        style={{ top: `${menuPos.top}px`, right: `${menuPos.right}px` }}
-      >
-        {/* Segitiga presisi */}
-        <div className="absolute -top-2 z-50" style={{ left: arrowLeft }}>
-          <div className="w-4 h-4 bg-black/80 rotate-45 shadow-xl" />
-        </div>
-        {/* Menu utama */}
-        <div ref={menuMainRef} className="relative max-w-[400px] w-[80vw] rounded-2xl bg-black/80 backdrop-blur-lg shadow-xl p-8">
-          {/* Hapus tombol Close di sini */}
-          <nav className="space-y-6">
-            {expandedNavItems.map((item, index) => (
-              <AnimatedNavItem
-                key={item.name}
-                label={item.name}
-                onClick={item.name === 'Contact' && onContactClick
-                  ? () => { setIsMenuOpen(false); onContactClick(); }
-                  : () => { setIsMenuOpen(false); handleSectionScroll(item.href); }
-                }
-                className={`w-full py-4 text-2xl font-medium transition-colors duration-200 ${
-                  item.secondary 
-                    ? 'text-white/60 hover:text-white/80' 
-                    : 'text-white hover:text-white/80'
-                }`}
-              />
-            ))}
-          </nav>
-          {/* Mobile Footer */}
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <div className="flex gap-6">
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-white/60 hover:text-white transition-colors duration-200"
-              >
-                linkedin
-              </a>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-white/60 hover:text-white transition-colors duration-200"
-              >
-                instagram
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AnimatePresence>
+        <AnimatedMenu
+          open={isMenuOpen}
+          anchorRef={menuButtonRef}
+          items={expandedNavItems}
+          renderItem={(item) => (
+            <AnimatedNavItem
+              label={item.name}
+              onClick={item.name === 'Contact' && onContactClick
+                ? () => { setIsMenuOpen(false); onContactClick(); }
+                : () => { setIsMenuOpen(false); handleSectionScroll(item.href); }
+              }
+              className={`w-full py-4 text-2xl font-medium transition-colors duration-200 ${
+                item.secondary 
+                  ? 'text-white/60 hover:text-white/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
+            />
+          )}
+        />
+      </AnimatePresence>
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </header>
   );
