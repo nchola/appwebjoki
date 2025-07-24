@@ -82,15 +82,15 @@ const About = () => {
           items={benefitList.map(b => ({
             title: b.title,
             description: b.description,
-            label: b.title,
+            label: "", // atau hapus
             color: "#18181b"
           }))}
           enableStars={true}
           enableSpotlight={true}
           enableBorderGlow={true}
           disableAnimations={false}
-          particleCount={0}
-          enableTilt={false}
+          particleCount={12}
+          enableTilt={true}
           clickEffect={true}
           enableMagnetism={true}
         />
