@@ -1,6 +1,7 @@
 'use client'
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import AnimatedNavItem from './ui/AnimatedNavItem';
 
 interface FooterProps {
   onContactClick?: () => void;
@@ -82,21 +83,6 @@ export function Footer({ onContactClick }: FooterProps) {
 
     return (
         <footer className="flex relative flex-col container py-12 h-screen justify-evenly">
-            <div className='flex flex-col'>
-                <ul className="flex flex-col gap-5 uppercase w-24">
-                    {['About', 'Services', 'Works', 'Contact'].map((text, index) => (
-                        <li
-                            key={index}
-                            ref={(el) => { listItemsRef.current[index] = el; }}
-                            className="relative overflow-hidden h-5 cursor-pointer"
-                            onClick={text === 'Contact' && onContactClick ? onContactClick : undefined}
-                        >
-                            <span className="block initial absolute top-0 left-0 w-full h-full">{text}</span>
-                            <span className="block hover absolute top-0 left-0 w-full h-full">{text}</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
             <div className='relative overflow-hidden group/line py-12 mx-auto w-fit cursor-pointer'>
                 <h1 className='w-full text-[12vw] uppercase leading-none'>Let&apos;s Talk</h1>
                 <span className='block w-full bg-white h-3 -translate-x-full group-hover/line:translate-x-0 duration-500 opacity-0 group-hover/line:opacity-100' />
@@ -125,7 +111,7 @@ export function Footer({ onContactClick }: FooterProps) {
                     </div>
                 </div>
                 <div className='flex gap-10 uppercase'>
-                    <span>2024 © CharltonK.dev</span>
+                    <span>2025 © APPWEBJOKI</span>
                 </div>
             </div>
         </footer>

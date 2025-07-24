@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Sun, Moon, Globe, ArrowUpRight, Home, Briefcase, User, Mail, Settings } from 'lucide-react';
 import Dock from '../Dock/Dock';
 import type { DockItemData } from '../Dock/Dock';
 import ContactModal from './ContactModal';
 import { navItems, expandedNavItems } from '../../data/navigation';
+import AnimatedNavItem from './AnimatedNavItem';
 
 interface HeaderProps {
   onContactClick?: () => void;
@@ -16,6 +17,8 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [currentLang, setCurrentLang] = useState('id');
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [menuPos, setMenuPos] = useState<{top: number, right: number}>({top: 0, right: 0});
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +28,16 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (isMenuOpen && menuButtonRef.current) {
+      const rect = menuButtonRef.current.getBoundingClientRect();
+      setMenuPos({
+        top: rect.bottom + 12, // 12px di bawah icon
+        right: window.innerWidth - rect.right
+      });
+    }
+  }, [isMenuOpen]);
 
   // Helper scroll
   const handleSectionScroll = (href: string) => {
@@ -140,7 +153,7 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                 </div>
               )}
             </div>
-            {/* Theme Switcher */}
+            {/* Theme Switcher
             <button
               onClick={toggleTheme}
               className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all duration-200"
@@ -151,9 +164,10 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
               ) : (
                 <Sun className="w-4 h-4" />
               )}
-            </button>
+            </button> */}
             {/* Mobile Menu Toggle */}
             <button
+              ref={menuButtonRef}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="block w-10 h-10 flex items-center justify-center"
               aria-label="Toggle menu"
@@ -180,66 +194,38 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
         </div>
       </div>
       {/* Mobile Expanded Navigation */}
-      <div 
-        className={`fixed inset-0 bg-[#0C0D10]/98 backdrop-blur-md transition-all duration-500 ease-out ${
-          isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
-        style={{ top: '130px' }}
+      <div
+        className={`fixed z-50 transition-all duration-500 ease-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+        style={{ top: `${menuPos.top}px`, right: `${menuPos.right}px` }}
       >
-        <div className="container mx-auto px-6 py-8">
+        {/* Segitiga */}
+        <div className="absolute right-8 -top-2 z-50">
+          <div className="w-4 h-4 bg-black/80 rotate-45 shadow-xl" />
+        </div>
+        {/* Menu utama */}
+        <div className="relative max-w-[400px] w-[80vw] rounded-2xl bg-black/80 backdrop-blur-lg shadow-xl p-8">
+          <button
+            className="absolute top-4 right-4 text-white/70 hover:text-white text-lg"
+            onClick={() => setIsMenuOpen(false)}
+            aria-label="Close"
+          >
+            Close <span className="ml-1">&times;</span>
+          </button>
           <nav className="space-y-6">
             {expandedNavItems.map((item, index) => (
-              <div
+              <AnimatedNavItem
                 key={item.name}
-                className={`transition-all duration-500 ease-out ${
-                  isMenuOpen 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-4'
+                label={item.name}
+                onClick={item.name === 'Contact' && onContactClick
+                  ? () => { setIsMenuOpen(false); onContactClick(); }
+                  : () => { setIsMenuOpen(false); handleSectionScroll(item.href); }
+                }
+                className={`w-full py-4 text-2xl font-medium transition-colors duration-200 ${
+                  item.secondary 
+                    ? 'text-white/60 hover:text-white/80' 
+                    : 'text-white hover:text-white/80'
                 }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                {item.name === 'Contact' && onContactClick ? (
-                  <button
-                    type="button"
-                    onClick={() => { setIsMenuOpen(false); onContactClick(); }}
-                    className={`group flex items-center justify-between py-4 text-2xl font-medium transition-colors duration-200 ${
-                      item.secondary 
-                        ? 'text-white/60 hover:text-white/80' 
-                        : 'text-white hover:text-white/80'
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      {item.icon === 'Home' && <Home className="w-5 h-5" />}
-                      {item.icon === 'Briefcase' && <Briefcase className="w-5 h-5" />}
-                      {item.icon === 'User' && <User className="w-5 h-5" />}
-                      {item.icon === 'Mail' && <Mail className="w-5 h-5" />}
-                      {item.icon === 'Settings' && <Settings className="w-5 h-5" />}
-                      {item.name}
-                    </span>
-                    <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => { setIsMenuOpen(false); handleSectionScroll(item.href); }}
-                    className={`group flex items-center justify-between py-4 text-2xl font-medium transition-colors duration-200 ${
-                      item.secondary 
-                        ? 'text-white/60 hover:text-white/80' 
-                        : 'text-white hover:text-white/80'
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      {item.icon === 'Home' && <Home className="w-5 h-5" />}
-                      {item.icon === 'Briefcase' && <Briefcase className="w-5 h-5" />}
-                      {item.icon === 'User' && <User className="w-5 h-5" />}
-                      {item.icon === 'Mail' && <Mail className="w-5 h-5" />}
-                      {item.icon === 'Settings' && <Settings className="w-5 h-5" />}
-                      {item.name}
-                    </span>
-                    <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                  </button>
-                )}
-              </div>
+              />
             ))}
           </nav>
           {/* Mobile Footer */}
