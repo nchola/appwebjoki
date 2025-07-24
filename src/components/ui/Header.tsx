@@ -18,7 +18,9 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuMainRef = useRef<HTMLDivElement>(null);
   const [menuPos, setMenuPos] = useState<{top: number, right: number}>({top: 0, right: 0});
+  const [arrowLeft, setArrowLeft] = useState<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,12 +32,17 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   }, []);
 
   useEffect(() => {
-    if (isMenuOpen && menuButtonRef.current) {
-      const rect = menuButtonRef.current.getBoundingClientRect();
+    if (isMenuOpen && menuButtonRef.current && menuMainRef.current) {
+      const iconRect = menuButtonRef.current.getBoundingClientRect();
+      const menuRect = menuMainRef.current.getBoundingClientRect();
+      const iconCenter = iconRect.left + iconRect.width / 2;
+      const arrowWidth = 16; // w-4
+      const left = iconCenter - menuRect.left - arrowWidth / 2;
       setMenuPos({
-        top: rect.bottom + 12, // 12px di bawah icon
-        right: window.innerWidth - rect.right
+        top: iconRect.bottom + 12,
+        right: window.innerWidth - iconRect.right
       });
+      setArrowLeft(left);
     }
   }, [isMenuOpen]);
 
@@ -198,19 +205,13 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
         className={`fixed z-50 transition-all duration-500 ease-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         style={{ top: `${menuPos.top}px`, right: `${menuPos.right}px` }}
       >
-        {/* Segitiga */}
-        <div className="absolute right-8 -top-2 z-50">
+        {/* Segitiga presisi */}
+        <div className="absolute -top-2 z-50" style={{ left: arrowLeft }}>
           <div className="w-4 h-4 bg-black/80 rotate-45 shadow-xl" />
         </div>
         {/* Menu utama */}
-        <div className="relative max-w-[400px] w-[80vw] rounded-2xl bg-black/80 backdrop-blur-lg shadow-xl p-8">
-          <button
-            className="absolute top-4 right-4 text-white/70 hover:text-white text-lg"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Close"
-          >
-            Close <span className="ml-1">&times;</span>
-          </button>
+        <div ref={menuMainRef} className="relative max-w-[400px] w-[80vw] rounded-2xl bg-black/80 backdrop-blur-lg shadow-xl p-8">
+          {/* Hapus tombol Close di sini */}
           <nav className="space-y-6">
             {expandedNavItems.map((item, index) => (
               <AnimatedNavItem
