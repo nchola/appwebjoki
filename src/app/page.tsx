@@ -9,7 +9,7 @@ import LenisScroll from '@/components/ui/LenisScroll';
 
 const Index = () => {
   return (
-    <div className="min-h-screen w-screen max-w-screen overflow-x-hidden box-border">
+    <div className="min-h-screen">
       <Header />
       <ScrollHeroSection />
       <div
