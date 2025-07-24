@@ -9,15 +9,18 @@ import LenisScroll from '@/components/ui/LenisScroll';
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-screen max-w-screen overflow-x-hidden box-border">
       <Header />
       <ScrollHeroSection />
       <div
         id="main-content-wrapper"
-        className="relative z-[2] w-full"
+        className="relative z-[2] w-full max-w-full overflow-x-hidden box-border"
         style={{
           backgroundColor: '#0f172a',
-          minHeight: '100vh'
+          minHeight: '100vh',
+          width: '100vw',
+          maxWidth: '100vw',
+          boxSizing: 'border-box',
         }}
       >
         <LenisScroll />
