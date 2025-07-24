@@ -1,9 +1,6 @@
 'use client'
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from "framer-motion";
-import { BentoGridItem } from "./ui/BentoGrid";
-import { cn } from "@/utils/cn";
-import CardSwap, { Card } from "./CardSwap/CardSwap";
 import MagicBento from './MagicBento/MagicBento';
 
 const benefitList = [
@@ -62,38 +59,42 @@ const About = () => {
   }, [hasAnimated]);
 
   return (
-    <div className='relative flex flex-col lg:flex-row w-full h-auto min-h-screen p-6 lg:p-24 justify-center items-center bg-black z-10'>
-      {/* Kiri: Teks */}
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-        transition={{ duration: 0.5 }}
-        className='flex z-50 flex-col w-full lg:w-1/2 text-xl leading-[2] md:text-3xl max-w-4xl md:leading-[2] mb-8 lg:mb-0'
-      >
-        appwebjoki is a web development agency dedicated to helping your business thrive in the digital era. Our experienced team creates visually appealing, functional, and responsive websites optimized for your business goals.
-        <br /><br />
-        We offer a flexible, customer-focused approach with unlimited revisions until youre completely satisfied. Our mission is to empower your business with innovative web solutions that increase market reach, strengthen brand awareness, and drive sales growth.
-        
-      </motion.div>
-      {/* Kanan: MagicBento untuk Benefit */}
-      <div className="w-full max-w-xl mx-auto">
-        <MagicBento
-          items={benefitList.map(b => ({
-            title: b.title,
-            description: b.description,
-            label: "", // atau hapus
-            color: "#18181b"
-          }))}
-          enableStars={true}
-          enableSpotlight={true}
-          enableBorderGlow={true}
-          disableAnimations={false}
-          particleCount={12}
-          enableTilt={true}
-          clickEffect={true}
-          enableMagnetism={true}
-        />
+    <div className="relative w-full h-auto min-h-screen p-6 lg:p-24 bg-black z-10">
+      {/* Header About */}
+      <h3 className="w-full text-xl md:text-5xl font-bold text-white mb-8 text-center lg:text-left">About</h3>
+      <div className='flex flex-col lg:flex-row justify-center items-center'>
+        {/* Kiri: Teks */}
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+          transition={{ duration: 0.5 }}
+          className='flex z-50 flex-col w-full lg:w-1/2 text-xl leading-[2] md:text-3xl max-w-4xl md:leading-[2] mb-8 lg:mb-0'
+        >
+          appwebjoki is a web development agency dedicated to helping your business thrive in the digital era. Our experienced team creates visually appealing, functional, and responsive websites optimized for your business goals.
+          <br /><br />
+          We offer a flexible, customer-focused approach with unlimited revisions until youre completely satisfied. Our mission is to empower your business with innovative web solutions that increase market reach, strengthen brand awareness, and drive sales growth.
+          
+        </motion.div>
+        {/* Kanan: MagicBento */}
+        <div className="w-full max-w-xl mx-auto">
+          <MagicBento
+            items={benefitList.map(b => ({
+              title: b.title,
+              description: b.description,
+              label: "", // atau hapus
+              color: "#18181b"
+            }))}
+            enableStars={true}
+            enableSpotlight={true}
+            enableBorderGlow={true}
+            disableAnimations={false}
+            particleCount={12}
+            enableTilt={true}
+            clickEffect={true}
+            enableMagnetism={true}
+          />
+        </div>
       </div>
     </div>
   );

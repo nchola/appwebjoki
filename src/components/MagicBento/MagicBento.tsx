@@ -622,9 +622,11 @@ const MagicBento: React.FC<BentoProps & { items?: MagicBentoItem[] }> = ({
             inset: 0;
             padding: 6px;
             background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.8)) 0%,
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.4)) 30%,
-                transparent 60%);
+                rgba(156,67,254,0.8) 0%, /* ungu orb */
+                rgba(76,194,233,0.4) 40%, /* biru muda orb */
+                rgba(16,20,153,0.2) 80%, /* biru tua orb */
+                transparent 100%
+              );
             border-radius: inherit;
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask-composite: subtract;
