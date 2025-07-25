@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
-import React, { useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useEffect, useRef, useMemo, useCallback, useState } from "react";
 
 type Vec2 = [number, number];
 
@@ -262,7 +262,7 @@ export default function FaultyTerminal({
   tint = "#ffffff",
   mouseReact = true,
   mouseStrength = 0.2,
-  dpr = Math.min(window.devicePixelRatio || 1, 2),
+  dpr: _dpr,
   pageLoadAnimation = true,
   brightness = 1,
   className,
@@ -285,6 +285,13 @@ export default function FaultyTerminal({
     () => (typeof dither === "boolean" ? (dither ? 1 : 0) : dither),
     [dither]
   );
+
+  const [dpr, setDpr] = useState(1);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setDpr(Math.min(window.devicePixelRatio || 1, 2));
+    }
+  }, []);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const ctn = containerRef.current;
