@@ -11,7 +11,6 @@ export const expandedNavItems = [
   { name: 'Our Services', href: '/services', featured: true, icon: 'Settings' },
   { name: 'About', href: '/about', featured: true, icon: 'User' },
   { name: 'Contact', href: '/contact', featured: true, icon: 'Mail' },
-  { name: 'Services', href: '/services', secondary: true, featured: true, icon: 'Settings' },
 ];
 
 export const footerLinks = [

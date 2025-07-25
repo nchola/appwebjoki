@@ -2,31 +2,45 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 import MagicBento from './MagicBento/MagicBento';
+import { useLanguage } from "@/context/LanguageContext";
 
 const benefitList = [
   {
     id: 1,
-    title: "Responsif di Segala Perangkat",
-    description: "Website tampil optimal di desktop, tablet, dan smartphone."
+    title: { id: "Responsif di Segala Perangkat", en: "Responsive on All Devices" },
+    description: {
+      id: "Website tampil optimal di desktop, tablet, dan smartphone.",
+      en: "Website looks optimal on desktop, tablet, and smartphone."
+    }
   },
   {
     id: 2,
-    title: "Revisi tanpa batas",
-    description: "Bebas revisi hingga Anda benar-benar puas dengan hasilnya."
+    title: { id: "Revisi tanpa batas", en: "Unlimited Revisions" },
+    description: {
+      id: "Bebas revisi hingga Anda benar-benar puas dengan hasilnya.",
+      en: "Unlimited revisions until you are truly satisfied with the result."
+    }
   },
   {
     id: 3,
-    title: "Optimasi untuk Pertumbuhan Bisnis",
-    description: "Fokus pada konversi, SEO, dan performa untuk mendukung bisnis Anda."
+    title: { id: "Optimasi untuk Pertumbuhan Bisnis", en: "Optimized for Business Growth" },
+    description: {
+      id: "Fokus pada konversi, SEO, dan performa untuk mendukung bisnis Anda.",
+      en: "Focus on conversion, SEO, and performance to support your business."
+    }
   },
   {
     id: 4,
-    title: "Biaya Terjangkau, Kualitas Terbaik",
-    description: "Harga bersaing tanpa kompromi kualitas dan layanan."
+    title: { id: "Biaya Terjangkau, Kualitas Terbaik", en: "Affordable, Best Quality" },
+    description: {
+      id: "Harga bersaing tanpa kompromi kualitas dan layanan.",
+      en: "Competitive prices without compromising quality and service."
+    }
   },
 ];
 
 const About = () => {
+  const { language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -61,7 +75,9 @@ const About = () => {
   return (
     <div className="relative w-full h-auto min-h-screen p-6 lg:p-24 bg-black z-10">
       {/* Header About */}
-      <h3 className="w-full text-xl md:text-5xl font-bold text-white mb-8 text-center lg:text-left">About</h3>
+      <h3 className="w-full text-xl md:text-5xl font-bold text-white mb-8 text-center lg:text-left">
+        {language === 'id' ? 'Tentang Kami' : 'About'}
+      </h3>
       <div className='flex flex-col lg:flex-row justify-center items-center'>
         {/* Kiri: Teks */}
         <motion.div
@@ -71,18 +87,17 @@ const About = () => {
           transition={{ duration: 0.5 }}
           className='flex z-50 flex-col w-full lg:w-1/2 text-xl leading-[2] md:text-3xl max-w-4xl md:leading-[2] mb-8 lg:mb-0'
         >
-          appwebjoki is a web development agency dedicated to helping your business thrive in the digital era. Our experienced team creates visually appealing, functional, and responsive websites optimized for your business goals.
-          <br /><br />
-          We offer a flexible, customer-focused approach with unlimited revisions until youre completely satisfied. Our mission is to empower your business with innovative web solutions that increase market reach, strengthen brand awareness, and drive sales growth.
-          
+          {language === 'id'
+            ? 'appwebjoki adalah agensi pengembangan web yang berdedikasi membantu bisnis Anda berkembang di era digital. Tim kami yang berpengalaman menciptakan website yang menarik, fungsional, dan responsif, dioptimalkan untuk tujuan bisnis Anda.\n\nKami menawarkan pendekatan fleksibel dan berorientasi pada pelanggan dengan revisi tanpa batas hingga Anda benar-benar puas. Misi kami adalah memberdayakan bisnis Anda dengan solusi web inovatif yang meningkatkan jangkauan pasar, memperkuat brand awareness, dan mendorong pertumbuhan penjualan.'
+            : 'appwebjoki is a web development agency dedicated to helping your business thrive in the digital era. Our experienced team creates visually appealing, functional, and responsive websites optimized for your business goals.\n\nWe offer a flexible, customer-focused approach with unlimited revisions until you are completely satisfied. Our mission is to empower your business with innovative web solutions that increase market reach, strengthen brand awareness, and drive sales growth.'}
         </motion.div>
         {/* Kanan: MagicBento */}
         <div className="w-full max-w-xl mx-auto">
           <MagicBento
             items={benefitList.map(b => ({
-              title: b.title,
-              description: b.description,
-              label: "", // atau hapus
+              title: b.title[language],
+              description: b.description[language],
+              label: "",
               color: "#18181b"
             }))}
             enableStars={true}

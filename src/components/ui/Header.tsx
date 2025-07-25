@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Sun, Moon, Globe, ArrowUpRight, Home, Briefcase, User, Mail, Settings } from 'lucide-react';
+import { Menu, X, Sun, Moon, Globe, ArrowUpRight, Home, Briefcase, User, Mail, Settings, ChevronDown } from 'lucide-react';
 import Dock from '../Dock/Dock';
 import type { DockItemData } from '../Dock/Dock';
 import ContactModal from './ContactModal';
@@ -7,6 +7,7 @@ import { navItems, expandedNavItems } from '../../data/navigation';
 import AnimatedNavItem from './AnimatedNavItem';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedMenu from './AnimatedMenu';
+import { useLanguage } from "@/context/LanguageContext";
 
 interface HeaderProps {
   onContactClick?: () => void;
@@ -16,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [currentLang, setCurrentLang] = useState('id');
+  const { language, setLanguage } = useLanguage();
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -94,8 +95,39 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   };
 
   const switchLanguage = (lang: string) => {
-    setCurrentLang(lang);
+    setLanguage(lang as any);
     setIsLangDropdownOpen(false);
+  };
+
+  // expandedMenuItems: label pada Globe harus selalu bahasa yang sedang aktif
+  const expandedMenuItems = [
+    ...expandedNavItems.map(item => ({ ...item, isLanguage: false })),
+    {
+      name: language === 'id' ? 'Bahasa Indonesia' : 'English',
+      icon: 'Globe',
+      isLanguage: true,
+      href: '',
+      secondary: false,
+    },
+  ];
+
+  const getIcon = (iconName: string, isLang: boolean, isOpen: boolean) => {
+    if (isLang) {
+      return (
+        <span className="flex items-center gap-1">
+          <Globe className="w-5 h-5 text-white/80" />
+          <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        </span>
+      );
+    }
+    switch (iconName) {
+      case 'Home': return <Home className="w-5 h-5 text-white/80" />;
+      case 'Briefcase': return <Briefcase className="w-5 h-5 text-white/80" />;
+      case 'User': return <User className="w-5 h-5 text-white/80" />;
+      case 'Mail': return <Mail className="w-5 h-5 text-white/80" />;
+      case 'Settings': return <Settings className="w-5 h-5 text-white/80" />;
+      default: return null;
+    }
   };
 
   return (
@@ -133,35 +165,6 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
 
           {/* Header Actions */}
           <div className="flex items-center gap-4">
-            {/* Language Switcher */}
-            <div className="relative">
-              <button
-                onClick={toggleLang}
-                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200"
-                aria-label="Language switcher"
-              >
-                <Globe className="w-4 h-4" />
-                <span className="text-sm font-medium">{currentLang}</span>
-                <svg 
-                  className={`w-3 h-3 transition-transform duration-200 ${isLangDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {isLangDropdownOpen && (
-                <div className="absolute top-full right-0 mt-2 py-2 w-20 bg-[#0C0D10]/95 backdrop-blur-md border border-white/10 rounded-lg">
-                  <button
-                    onClick={() => switchLanguage('en')}
-                    className="block w-full px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors duration-200"
-                  >
-                    en
-                  </button>
-                </div>
-              )}
-            </div>
             <button
               ref={menuButtonRef}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -194,21 +197,51 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
         <AnimatedMenu
           open={isMenuOpen}
           anchorRef={menuButtonRef}
-          items={expandedNavItems}
-          renderItem={(item) => (
-            <AnimatedNavItem
-              label={item.name}
-              onClick={item.name === 'Contact' && onContactClick
-                ? () => { setIsMenuOpen(false); onContactClick(); }
-                : () => { setIsMenuOpen(false); handleSectionScroll(item.href); }
-              }
-              className={`w-full py-4 text-2xl font-medium transition-colors duration-200 ${
-                item.secondary 
-                  ? 'text-white/60 hover:text-white/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
-            />
-          )}
+          items={expandedMenuItems}
+          renderItem={(item, idx) => {
+            const isLang = !!item.isLanguage;
+            const isOpen = isLang && isLangDropdownOpen;
+            return (
+              <div className={isOpen ? 'bg-white/10 rounded-lg relative' : 'relative'}>
+                <AnimatedNavItem
+                  label={item.name}
+                  icon={getIcon(item.icon, isLang, isOpen)}
+                  onClick={isLang
+                    ? () => setIsLangDropdownOpen((open) => !open)
+                    : item.name === 'Contact' && onContactClick
+                      ? () => { setIsMenuOpen(false); onContactClick(); }
+                      : () => { setIsMenuOpen(false); handleSectionScroll(item.href); }
+                  }
+                  className={`w-full py-4 text-2xl font-medium transition-colors duration-200 ${
+                    item.secondary 
+                      ? 'text-white/60 hover:text-white/80' 
+                      : 'text-white hover:text-white/80'
+                  }`}
+                />
+                {/* Dropdown language di bawah item Globe */}
+                {isOpen && (
+                  <div className="absolute left-0 mt-2 py-2 w-40 bg-[#0C0D10]/95 backdrop-blur-md border border-white/10 rounded-lg z-50">
+                    {language !== 'en' && (
+                      <button
+                        onClick={() => { switchLanguage('en'); setIsMenuOpen(false); setIsLangDropdownOpen(false); }}
+                        className="block w-full px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors duration-200 text-left"
+                      >
+                        English
+                      </button>
+                    )}
+                    {language !== 'id' && (
+                      <button
+                        onClick={() => { switchLanguage('id'); setIsMenuOpen(false); setIsLangDropdownOpen(false); }}
+                        className="block w-full px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors duration-200 text-left"
+                      >
+                        Bahasa Indonesia
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          }}
         />
       </AnimatePresence>
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />

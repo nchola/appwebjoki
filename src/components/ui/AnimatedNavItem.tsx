@@ -5,9 +5,10 @@ interface AnimatedNavItemProps {
   label: string;
   onClick?: () => void;
   className?: string;
+  icon?: React.ReactNode;
 }
 
-const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({ label, onClick, className }) => {
+const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({ label, onClick, className, icon }) => {
   const itemRef = useRef<HTMLLIElement | HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -65,9 +66,10 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({ label, onClick, class
       <button
         ref={itemRef as React.RefObject<HTMLButtonElement>}
         onClick={onClick}
-        className={`relative overflow-hidden h-5 cursor-pointer ${className || ''}`}
+        className={`relative overflow-hidden h-5 cursor-pointer flex items-center gap-2 ${className || ''}`}
         type="button"
       >
+        {icon && <span className="mr-2 flex-shrink-0">{icon}</span>}
         <span className="block initial absolute top-0 left-0 w-full h-full">{label}</span>
         <span className="block hover absolute top-0 left-0 w-full h-full">{label}</span>
       </button>
@@ -76,8 +78,9 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({ label, onClick, class
   return (
     <li
       ref={itemRef as React.RefObject<HTMLLIElement>}
-      className={`relative overflow-hidden h-5 cursor-pointer ${className || ''}`}
+      className={`relative overflow-hidden h-5 cursor-pointer flex items-center gap-2 ${className || ''}`}
     >
+      {icon && <span className="mr-2 flex-shrink-0">{icon}</span>}
       <span className="block initial absolute top-0 left-0 w-full h-full">{label}</span>
       <span className="block hover absolute top-0 left-0 w-full h-full">{label}</span>
     </li>
