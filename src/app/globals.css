@@ -168,3 +168,16 @@ html.lenis, html.lenis body {
   transition: transform 0.3s, opacity 0.3s;
 }
 .footer-reveal-ready #footer-reveal { transition: none; }
+
+.faulty-terminal-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.faulty-terminal-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+}

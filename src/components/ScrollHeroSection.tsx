@@ -1,6 +1,7 @@
 import TrustedBySection from './ui/TrustedBySection';
 import Orb from './Orb/Orb';
 import { TextPressureHero } from './TextPressure/TextPressure';
+import FaultyTerminal from './FaultyTerminal/FaultyTerminal';
 
 // test
 const ScrollHeroSection = () => {
@@ -17,10 +18,25 @@ const ScrollHeroSection = () => {
       <div className="absolute inset-0 w-full h-full">
         {/* This should be the SAME background as the section above */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 opacity-20 z-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/30 rounded-full blur-3xl animate-float"></div>
+        {/* Animated Background: FaultyTerminal */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <FaultyTerminal
+            className="w-full h-full"
+            scale={1.5}
+            gridMul={[2,1]}
+            digitSize={1.5}
+            scanlineIntensity={0.18}
+            glitchAmount={0.7}
+            flickerAmount={0.5}
+            noiseAmp={0.7}
+            chromaticAberration={0.04}
+            dither={0.2}
+            curvature={0.12}
+            tint="#919191"
+            mouseReact={false}
+            brightness={0.7}
+            style={{position: 'absolute', inset: 0, zIndex: 0}}
+          />
         </div>
         {/* Reduce overlay opacity or remove entirely */}
         <div className="absolute inset-0 bg-black/20 z-20"></div>
@@ -48,7 +64,7 @@ const ScrollHeroSection = () => {
         </div>
       </div>
 
-      <TrustedBySection></TrustedBySection>
+      {/* <TrustedBySection></TrustedBySection> */}
     </section>
   );
 };

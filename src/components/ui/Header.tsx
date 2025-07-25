@@ -112,7 +112,7 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                 <img
                   src="/logo.svg"
                   alt="AppWebJoki Logo"
-                  className="h-8 w-auto"
+                  className="h-auto w-52"
                   style={{ filter: 'invert(1)' }}
                 />
               </div>
