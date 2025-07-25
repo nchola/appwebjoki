@@ -270,8 +270,8 @@ export default function FaultyTerminal({
   ...rest
 }: FaultyTerminalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const programRef = useRef<Program>(null);
-  const rendererRef = useRef<Renderer>(null);
+  const rendererRef = useRef<Renderer | null>(null);
+  const programRef = useRef<Program | null>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef<{ x: number; y: number }>({ x: 0.5, y: 0.5 });
   const frozenTimeRef = useRef(0);
