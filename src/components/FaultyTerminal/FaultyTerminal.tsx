@@ -273,7 +273,7 @@ export default function FaultyTerminal({
   const programRef = useRef<Program>(null);
   const rendererRef = useRef<Renderer>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
-  const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
+  const smoothMouseRef = useRef<{ x: number; y: number }>({ x: 0.5, y: 0.5 });
   const frozenTimeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const loadAnimationStartRef = useRef<number>(0);
