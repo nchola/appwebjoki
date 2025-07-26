@@ -8,7 +8,7 @@ import AnimatedNavItem from './AnimatedNavItem';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedMenu from './AnimatedMenu';
 import { useLanguage } from "@/context/LanguageContext";
-
+import Image from 'next/image';
 interface HeaderProps {
   onContactClick?: () => void;
 }
@@ -101,9 +101,9 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
 
   // expandedMenuItems: label pada Globe harus selalu bahasa yang sedang aktif
   const expandedMenuItems = [
-    ...expandedNavItems.map(item => ({ ...item, isLanguage: false })),
+    ...expandedNavItems.map(item => ({ ...item, isLanguage: false, secondary: false })),
     {
-      name: language === 'id' ? 'Bahasa Indonesia' : 'English',
+      name: language === 'id' ? 'Indonesia' : 'English',
       icon: 'Globe',
       isLanguage: true,
       href: '',
@@ -141,10 +141,12 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
           <div className="header__logo">
             <a href="#" aria-label="Company Homepage" className="block" onClick={e => { e.preventDefault(); handleSectionScroll('/'); }}>
               <div className="flex items-center">
-                <img
+                <Image
                   src="/logo.svg"
                   alt="AppWebJoki Logo"
                   className="h-auto w-52"
+                  width={208}
+                  height={104}
                   style={{ filter: 'invert(1)' }}
                 />
               </div>
@@ -234,7 +236,7 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                         onClick={() => { switchLanguage('id'); setIsMenuOpen(false); setIsLangDropdownOpen(false); }}
                         className="block w-full px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 transition-colors duration-200 text-left"
                       >
-                        Bahasa Indonesia
+                        Indonesia
                       </button>
                     )}
                   </div>
