@@ -4,12 +4,12 @@ import Image from "next/image";
 
 export default function Works() {
     return (
-        <section id="works" className="relative flex flex-col w-full h-full bg-black py-20">
-            <h3 className="text-xl text-white z-50 container pb-5">
+        <section id="works" className="relative flex flex-col w-full min-h-screen bg-black py-20 px-6 lg:px-24">
+            <h3 className="text-xl text-white z-50 pb-5">
                 Our Works
             </h3>
             {workItems.map((item) => (
-                <div key={item.id} className="flex md:flex-row flex-col justify-evenly container py-20 border-b-2 group">
+                <div key={item.id} className="flex md:flex-row flex-col justify-evenly w-full py-20 border-b-2 group">
                     <div className="flex flex-col p-6 gap-2 justify-between">
                         <div className="mb-12">
                             <h2 className="text-4xl font-semibold pb-3">{item.title}</h2>

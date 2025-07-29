@@ -81,7 +81,7 @@ export function Footer({ onContactClick }: FooterProps) {
     }, []);
 
     return (
-        <footer className="flex relative flex-col container py-12 h-screen justify-evenly bg-black">
+        <footer className="flex relative flex-col w-full px-6 lg:px-24 py-12 h-screen justify-evenly bg-black">
             <div className='relative overflow-hidden group/line py-12 mx-auto w-fit cursor-pointer'>
                 <h1 className='w-full text-[12vw] uppercase leading-none'>Let&apos;s Talk</h1>
                 <span className='block w-full bg-white h-3 -translate-x-full group-hover/line:translate-x-0 duration-500 opacity-0 group-hover/line:opacity-100' />

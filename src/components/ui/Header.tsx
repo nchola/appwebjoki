@@ -133,7 +133,7 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   return (
     <header 
       className="fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out bg-transparent"
-      style={{ height: '120px' }}
+      style={{ height: '120px', width: '100%' }}
     >
       <div className="container mx-auto px-6 h-full">
         <div className="flex items-center justify-between h-full">
@@ -153,8 +153,8 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
             </a>
           </div>
 
-          {/* Desktop Navigation with Dock */}
-          <div className="hidden lg:flex items-center h-full">
+          {/* Center Navigation with Dock */}
+          <div className="hidden lg:flex items-center justify-center h-full flex-1">
             <Dock
               items={dockItems}
               className="bg-white/5 backdrop-blur-sm border border-white/10 mt-0 mb-0 pb-0 static"
@@ -165,31 +165,37 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
             />
           </div>
 
-          {/* Header Actions */}
-          <div className="flex items-center gap-4">
+          {/* Header Actions - Aligned with Dock */}
+          <div className="flex items-center justify-end h-full">
             <button
               ref={menuButtonRef}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="block w-10 h-10 flex items-center justify-center"
+              className="relative flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group menu-button"
               aria-label="Toggle menu"
             >
-              <div className="relative w-6 h-6">
+              {/* Hamburger Icon */}
+              <div className="relative w-6 h-5 flex flex-col justify-between">
                 <span 
-                  className={`absolute block w-full h-0.5 bg-white transition-all duration-300 ${
-                    isMenuOpen ? 'top-3 rotate-45' : 'top-1'
+                  className={`block w-full h-0.5 bg-white transition-all duration-300 ${
+                    isMenuOpen ? 'rotate-45 translate-y-2' : ''
                   }`}
                 />
                 <span 
-                  className={`absolute block w-full h-0.5 bg-white transition-all duration-300 ${
-                    isMenuOpen ? 'opacity-0' : 'top-3'
+                  className={`block w-full h-0.5 bg-white transition-all duration-300 ${
+                    isMenuOpen ? 'opacity-0' : ''
                   }`}
                 />
                 <span 
-                  className={`absolute block w-full h-0.5 bg-white transition-all duration-300 ${
-                    isMenuOpen ? 'top-3 -rotate-45' : 'top-5'
+                  className={`block w-full h-0.5 bg-white transition-all duration-300 ${
+                    isMenuOpen ? '-rotate-45 -translate-y-2' : ''
                   }`}
                 />
               </div>
+              
+              {/* Menu Text */}
+              <span className="text-white font-medium text-base tracking-wide group-hover:text-white/90 transition-colors duration-300">
+                MENU
+              </span>
             </button>
           </div>
         </div>
@@ -214,7 +220,7 @@ const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                       ? () => { setIsMenuOpen(false); onContactClick(); }
                       : () => { setIsMenuOpen(false); handleSectionScroll(item.href); }
                   }
-                  className={`w-full py-4 text-2xl font-medium transition-colors duration-200 ${
+                  className={`w-full py-4 text-2xl font-medium transition-colors duration-200 nav-item-hover menu-item-glow ${
                     item.secondary 
                       ? 'text-white/60 hover:text-white/80' 
                       : 'text-white hover:text-white/80'

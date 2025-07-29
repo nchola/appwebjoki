@@ -14,46 +14,54 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({ label, onClick, class
   useEffect(() => {
     const item = itemRef.current;
     if (!item) return;
-    const textHover = item.querySelector('.hover');
-    gsap.set(textHover, { yPercent: 100, perspective: 1000, rotationX: -90 });
+    
     const handleMouseEnter = () => {
-      const textInitial = item.querySelector('.initial');
-      const textHover = item.querySelector('.hover');
-      gsap.to(textInitial, {
-        yPercent: -100,
-        perspective: 1000,
-        rotationX: 90,
-        duration: 1,
-        ease: 'power4.out',
+      // Background glow effect
+      gsap.to(item, {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)',
+        duration: 0.3,
+        ease: 'power2.out',
       });
-      gsap.to(textHover, {
-        yPercent: 0,
-        perspective: 1000,
-        rotationX: 0,
-        duration: 1,
-        ease: 'power4.out',
-      });
+      
+      // Icon animation
+      const iconElement = item.querySelector('.icon-wrapper');
+      if (iconElement) {
+        gsap.to(iconElement, {
+          scale: 1.1,
+          rotation: 5,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
     };
+    
     const handleMouseLeave = () => {
-      const textInitial = item.querySelector('.initial');
-      const textHover = item.querySelector('.hover');
-      gsap.to(textInitial, {
-        yPercent: 0,
-        perspective: 1000,
-        rotationX: 0,
-        duration: 1,
-        ease: 'power4.out',
+      // Reset background effect
+      gsap.to(item, {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        boxShadow: 'none',
+        duration: 0.3,
+        ease: 'power2.out',
       });
-      gsap.to(textHover, {
-        yPercent: 100,
-        perspective: 1000,
-        rotationX: -90,
-        duration: 1,
-        ease: 'power4.out',
-      });
+      
+      // Reset icon animation
+      const iconElement = item.querySelector('.icon-wrapper');
+      if (iconElement) {
+        gsap.to(iconElement, {
+          scale: 1,
+          rotation: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
     };
+    
     item.addEventListener('mouseenter', handleMouseEnter);
     item.addEventListener('mouseleave', handleMouseLeave);
+    
     return () => {
       item.removeEventListener('mouseenter', handleMouseEnter);
       item.removeEventListener('mouseleave', handleMouseLeave);
@@ -66,23 +74,30 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({ label, onClick, class
       <button
         ref={itemRef as React.RefObject<HTMLButtonElement>}
         onClick={onClick}
-        className={`relative overflow-hidden h-5 cursor-pointer flex items-center gap-2 ${className || ''}`}
+        className={`relative overflow-hidden cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent transition-all duration-300 hover:scale-[1.02] ${className || ''}`}
         type="button"
       >
-        {icon && <span className="mr-2 flex-shrink-0">{icon}</span>}
-        <span className="block initial absolute top-0 left-0 w-full h-full">{label}</span>
-        <span className="block hover absolute top-0 left-0 w-full h-full">{label}</span>
+        {icon && (
+          <span className="icon-wrapper mr-2 flex-shrink-0 transition-transform duration-300">
+            {icon}
+          </span>
+        )}
+        <span className="text-label flex-1">{label}</span>
       </button>
     );
   }
+  
   return (
     <li
       ref={itemRef as React.RefObject<HTMLLIElement>}
-      className={`relative overflow-hidden h-5 cursor-pointer flex items-center gap-2 ${className || ''}`}
+      className={`relative overflow-hidden cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent transition-all duration-300 hover:scale-[1.02] ${className || ''}`}
     >
-      {icon && <span className="mr-2 flex-shrink-0">{icon}</span>}
-      <span className="block initial absolute top-0 left-0 w-full h-full">{label}</span>
-      <span className="block hover absolute top-0 left-0 w-full h-full">{label}</span>
+      {icon && (
+        <span className="icon-wrapper mr-2 flex-shrink-0 transition-transform duration-300">
+          {icon}
+        </span>
+      )}
+      <span className="text-label flex-1">{label}</span>
     </li>
   );
 };

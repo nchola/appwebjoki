@@ -3,8 +3,8 @@ import { BentoGrid, BentoGridItem } from "./ui/BentoGrid";
 
 const Services = () => {
   return (
-    <section id="services" className="w-full flex flex-col relative bg-grid-white/[0.05] py-20">
-      <h3 className="text-xl text-white z-50 container pb-5">
+    <section id="services" className="w-full flex flex-col relative bg-grid-white/[0.05] py-20 min-h-screen px-6 lg:px-24">
+      <h3 className="text-xl text-white z-50 pb-5">
         Our Services
       </h3>
       <>
@@ -16,7 +16,7 @@ const Services = () => {
           }}
         />
 
-        <BentoGrid className="container pb-20">
+        <BentoGrid className="w-full pb-20">
           {gridItems.map((item, i) => (
             <BentoGridItem
               id={item.id}

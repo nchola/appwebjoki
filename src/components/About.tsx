@@ -73,7 +73,7 @@ const About = () => {
   }, [hasAnimated]);
 
   return (
-    <div className="relative w-full h-auto min-h-screen p-6 lg:p-24 bg-black z-10">
+    <section className="relative w-full h-auto min-h-screen p-6 lg:p-24 bg-black z-10">
       {/* Header About */}
       <h3 className="w-full text-xl md:text-5xl font-bold text-white mb-8 text-center lg:text-left">
         {language === 'id' ? 'Tentang Kami' : 'About'}
@@ -111,7 +111,7 @@ const About = () => {
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
