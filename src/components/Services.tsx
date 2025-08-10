@@ -1,5 +1,6 @@
 import { gridItems } from "../data";
 import { BentoGrid, BentoGridItem } from "./ui/BentoGrid";
+import { MarqueeDemo } from "./ui/MarqueeDemo";
 
 const Services = () => {
   return (
@@ -34,6 +35,10 @@ const Services = () => {
             />
           ))}
         </BentoGrid>
+
+        <div className="relative z-50 -mt-8">
+          <MarqueeDemo />
+        </div>
       </>
     </section>
   );

@@ -6,6 +6,13 @@
   --foreground-rgb: 11, 13, 33;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 0, 0, 0;
+  --sky-400: #38bdf8;
+  --sky-500: #0ea5e9;
+}
+
+.dark {
+  --sky-400: #38bdf8;
+  --sky-500: #0ea5e9;
 }
 
 
@@ -20,7 +27,8 @@ body {
   }
 }
 
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -40,34 +48,38 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-.creativeBtn{
+.creativeBtn {
   transition: 0.3s ease-in-out;
   position: relative;
   overflow: hidden;
   border: 1px solid #fff;
 }
+
 .creativeBtn:hover {
   color: #fff;
 }
+
 .creativeBtn span {
   position: relative;
   z-index: 9;
 }
+
 .creativeBtn:after {
   content: '';
   width: 100px;
   height: 100px;
   border-radius: 100%;
-  background:#000;
+  background: #000;
   position: absolute;
   display: block;
   left: 0;
-  top:calc(-5vh);
+  top: calc(-5vh);
   z-index: 0;
   scale: 0;
   transition: 0.3s ease-in-out;
 }
-.creativeBtn:hover:after{
+
+.creativeBtn:hover:after {
   scale: 1.2;
 }
 
@@ -131,6 +143,7 @@ html.lenis, html.lenis body {
   .soda {
     width: 150px;
   }
+
   .product {
     bottom: -260px;
   }
@@ -149,6 +162,7 @@ html.lenis, html.lenis body {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -161,13 +175,20 @@ html.lenis, html.lenis body {
 
 #footer-reveal {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100vh; z-index: 50;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 50;
   transform: translateY(100%);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.3s, opacity 0.3s;
 }
-.footer-reveal-ready #footer-reveal { transition: none; }
+
+.footer-reveal-ready #footer-reveal {
+  transition: none;
+}
 
 .faulty-terminal-container {
   width: 100%;
@@ -270,4 +291,31 @@ html.lenis, html.lenis body {
 
 .menu-item-glow:hover::before {
   opacity: 1;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse var(--duration) linear infinite;
 }
