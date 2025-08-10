@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Plus, Minus } from 'lucide-react';
 import { cn } from '@/utils/cn';
@@ -140,31 +140,27 @@ export const FAQ: React.FC<FAQProps> = ({
   return (
     <section 
       className={cn(
-        "relative overflow-hidden bg-background px-4 py-12 text-foreground",
+        "relative overflow-hidden bg-black px-4 py-8 md:py-12 text-white",
         className
       )}
       {...props}
     >
       <FAQHeader title={title} subtitle={subtitle} />
       
-      <div className="mx-auto mt-12 max-w-4xl">
-        {/* Modern Tab Navigation */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-muted/50 backdrop-blur-sm border rounded-full p-1">
-            {Object.entries(categories).map(([key, label]) => (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key)}
-                className={cn(
-                  "relative px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
-                  activeTab === key
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                )}
-              >
-                {label}
-              </button>
-            ))}
+      <div className="mx-auto mt-8 md:mt-12 max-w-4xl px-4 sm:px-6 lg:px-8">
+        {/* Mobile-First Tab Navigation */}
+        <div className="flex justify-center mb-6 md:mb-8 lg:mb-10">
+          <div className="bg-black/40 backdrop-blur-lg border border-white/20 rounded-2xl p-1 w-full max-w-md lg:max-w-2xl xl:max-w-4xl">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-wrap gap-1">
+              {Object.entries(categories).map(([key, label]) => (
+                <TabButton
+                  key={key}
+                  isActive={activeTab === key}
+                  onClick={() => setActiveTab(key)}
+                  label={label}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -178,23 +174,42 @@ export const FAQ: React.FC<FAQProps> = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  transition={{ duration: 0.7, ease: "easeInOut" }}
                   className="space-y-4"
                 >
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold">
+                  <motion.div 
+                    className="flex items-center gap-3 mb-6"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                  >
+                    <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
                       {categories[category as keyof typeof categories]}
                     </span>
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-white/60 text-sm">
                       {questions.length} questions
                     </span>
-                  </div>
+                  </motion.div>
 
-                  <div className="space-y-4">
+                  <motion.div 
+                    className="space-y-3 md:space-y-4"
+                    initial="hidden"
+                    animate="show"
+                    exit="hidden"
+                    variants={{
+                      hidden: {},
+                      show: { 
+                        transition: { 
+                          staggerChildren: 0.1,
+                          delayChildren: 0.3
+                        } 
+                      }
+                    }}
+                  >
                     {questions.map((faq, index) => (
-                      <FAQItem key={index} {...faq} />
+                      <FAQItem key={index} {...faq} index={index} />
                     ))}
-                  </div>
+                  </motion.div>
                 </motion.div>
               );
             }
@@ -206,33 +221,142 @@ export const FAQ: React.FC<FAQProps> = ({
   );
 };
 
-const FAQItem: React.FC<FAQItem> = ({ question, answer }) => {
+// Enhanced Tab Button with AnimatedNavItem effects
+const TabButton: React.FC<{
+  isActive: boolean;
+  onClick: () => void;
+  label: string;
+}> = ({ isActive, onClick, label }) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) return;
+    
+    const handleMouseEnter = () => {
+      if (!isActive) {
+        button.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        button.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        button.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.1)';
+        button.style.transform = 'scale(1.02)';
+      }
+    };
+    
+    const handleMouseLeave = () => {
+      if (!isActive) {
+        button.style.backgroundColor = 'transparent';
+        button.style.borderColor = 'transparent';
+        button.style.boxShadow = 'none';
+        button.style.transform = 'scale(1)';
+      }
+    };
+    
+    button.addEventListener('mouseenter', handleMouseEnter);
+    button.addEventListener('mouseleave', handleMouseLeave);
+    
+    return () => {
+      button.removeEventListener('mouseenter', handleMouseEnter);
+      button.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [isActive]);
+
+  return (
+    <button
+      ref={buttonRef}
+      onClick={onClick}
+      className={cn(
+        "relative overflow-hidden px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-3 rounded-xl text-xs sm:text-sm md:text-base font-medium transition-all duration-300 cursor-pointer flex-1 lg:flex-none",
+        isActive
+          ? "bg-white text-black shadow-lg shadow-white/20 scale-105"
+          : "text-white/80 hover:text-white border border-transparent"
+      )}
+    >
+      <span className="relative z-10 truncate">{label}</span>
+      {isActive && (
+        <motion.div
+          layoutId="activeTab"
+          className="absolute inset-0 bg-white rounded-xl"
+          initial={false}
+          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+        />
+      )}
+    </button>
+  );
+};
+
+// Enhanced FAQ Item with AnimatedMenu effects
+const FAQItem: React.FC<FAQItem & { index: number }> = ({ question, answer, index }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const item = itemRef.current;
+    if (!item) return;
+    
+    const handleMouseEnter = () => {
+      item.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+      item.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+      item.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.1)';
+      item.style.transform = 'scale(1.01)';
+    };
+    
+    const handleMouseLeave = () => {
+      if (!isOpen) {
+        item.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+        item.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        item.style.boxShadow = 'none';
+        item.style.transform = 'scale(1)';
+      }
+    };
+    
+    item.addEventListener('mouseenter', handleMouseEnter);
+    item.addEventListener('mouseleave', handleMouseLeave);
+    
+    return () => {
+      item.removeEventListener('mouseenter', handleMouseEnter);
+      item.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [isOpen]);
 
   return (
     <motion.div
+      ref={itemRef}
+      variants={{
+        hidden: { opacity: 0, y: 40 },
+        show: { 
+          opacity: 1, 
+          y: 0, 
+          transition: { 
+            duration: 0.7, 
+            ease: 'easeOut',
+            delay: index * 0.1
+          } 
+        }
+      }}
       layout
       className={cn(
-        "rounded-xl border transition-all duration-300",
-        isOpen ? "bg-muted/50 shadow-md" : "bg-card hover:bg-muted/30"
+        "rounded-2xl border transition-all duration-500 backdrop-blur-sm",
+        isOpen 
+          ? "bg-white/10 border-white/30 shadow-xl shadow-white/10" 
+          : "bg-white/5 border-white/10 hover:bg-white/8"
       )}
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between gap-4 p-6 text-left"
+        className="flex w-full items-center justify-between gap-4 p-4 md:p-6 text-left"
       >
-        <span className="font-medium text-foreground leading-relaxed">
+        <span className="font-medium text-white leading-relaxed text-sm md:text-base">
           {question}
         </span>
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
           className="flex-shrink-0"
         >
           {isOpen ? (
-            <Minus className="h-5 w-5 text-muted-foreground" />
+            <Minus className="h-4 w-4 md:h-5 md:w-5 text-white/60" />
           ) : (
-            <Plus className="h-5 w-5 text-muted-foreground" />
+            <Plus className="h-4 w-4 md:h-5 md:w-5 text-white/60" />
           )}
         </motion.div>
       </button>
@@ -243,11 +367,11 @@ const FAQItem: React.FC<FAQItem> = ({ question, answer }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-6">
-              <p className="text-muted-foreground leading-relaxed">
+            <div className="px-4 md:px-6 pb-4 md:pb-6">
+              <p className="text-white/70 leading-relaxed text-sm md:text-base">
                 {answer}
               </p>
             </div>
@@ -263,24 +387,24 @@ const FAQHeader: React.FC<FAQHeaderProps> = ({ title, subtitle }) => (
     <motion.span 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text font-medium text-transparent"
+      transition={{ duration: 0.7, ease: "easeInOut" }}
+      className="mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text font-medium text-transparent text-sm md:text-base"
     >
       {subtitle}
     </motion.span>
     <motion.h2 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-      className="mb-8 text-4xl md:text-5xl font-bold"
+      transition={{ duration: 0.7, ease: "easeInOut", delay: 0.1 }}
+      className="mb-6 md:mb-8 text-2xl md:text-4xl lg:text-5xl font-bold text-white"
     >
       {title}
     </motion.h2>
     <motion.span 
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      className="absolute -top-[350px] left-[50%] z-0 h-[500px] w-[600px] -translate-x-[50%] rounded-full bg-gradient-to-r from-primary/10 to-primary/5 blur-3xl" 
+      transition={{ duration: 1, delay: 0.2 }}
+      className="absolute -top-[200px] md:-top-[350px] left-[50%] z-0 h-[300px] w-[400px] md:h-[500px] md:w-[600px] -translate-x-[50%] rounded-full bg-gradient-to-r from-white/5 to-white/2 blur-3xl" 
     />
   </div>
 );
