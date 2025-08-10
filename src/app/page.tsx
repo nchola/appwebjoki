@@ -5,6 +5,7 @@ import About from "@/components/About";
 import ScrollHeroSection from "@/components/ScrollHeroSection";
 import Services from '@/components/Services';
 import Works from "@/components/Works";
+import FAQ from "@/components/faq-tabs";
 import Footer from "@/components/Footer";
 import LenisScroll from '@/components/ui/LenisScroll';
 import ContactModal from '@/components/ui/ContactModal';
@@ -38,6 +39,9 @@ const Index = () => {
           </section>
           <section id="work">
             <Works />
+          </section>
+          <section id="faq">
+            <FAQ />
           </section>
           <Footer onContactClick={() => setContactModalOpen(true)} />
         </div>
