@@ -4,6 +4,8 @@ import Image from "next/image";
 import React, { memo } from "react";
 
 const WorkItem = memo(function WorkItem({ item }: { item: typeof workItems[0] }) {
+  const supportsBlur = (src?: string) => typeof src === 'string' && /\.(jpe?g|png|webp|avif)$/i.test(src);
+  const blurUrl = typeof item.img === 'string' ? `/works/blur/${item.img.split('/').pop()?.replace(/\.(jpe?g|png|webp|avif)$/i, '-blur.jpg')}` : undefined;
   return (
     <div key={item.id} className="flex md:flex-row flex-col justify-evenly w-full py-20 border-b-2 group">
       <div className="flex flex-col p-6 gap-2 justify-between">

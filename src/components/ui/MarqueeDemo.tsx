@@ -107,7 +107,7 @@ export function MarqueeDemo() {
       {arr.map((Logo, index) => (
         <div
           key={index}
-          className="relative h-full w-fit mx-[4rem] flex items-center justify-start"
+          className="relative h-full w-fit mx-4 lg:mx-16 flex items-center justify-start"
         >
           <Logo />
         </div>
